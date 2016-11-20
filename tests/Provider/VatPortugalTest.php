@@ -26,7 +26,7 @@ use PHPUnit_Framework_TestCase;
 use Welhott\Vatlidator\Provider\VatPortugal;
 
 /**
- * Class HexadecimalToBase64Test
+ * Class VatPortugalTest
  * @package Welhott\Vatlidator\Provider\Tests
  */
 class VatPortugalTest extends PHPUnit_Framework_TestCase
@@ -37,9 +37,11 @@ class VatPortugalTest extends PHPUnit_Framework_TestCase
     private $country = 'PT';
 
     /**
+     * @test Confirm that the provided VAT number for Portugal is valid.
      * @dataProvider getValidVatNumbers
+     * @param string $number The number to validate from the dataProvider
      */
-    public function testValidPortugueseVat($number)
+    public function testValidPortugueseVat(string $number)
     {
         $validator = new VatPortugal($number);
 
@@ -49,36 +51,46 @@ class VatPortugalTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @test Confirm that the provided VAT number for Portugal is invalid.
      * @dataProvider getInvalidVatNumbers
+     * @param string $number The number to validate from the dataProvider
      */
-    public function testInvalidPortugueseVat($number)
+    public function testInvalidPortugueseVat(string $number)
     {
         $validator = new VatPortugal($number);
 
-        $this->assertFalse($validator->validate());
+        $this->assertFalse($validator->validate(), sprintf('%d should be invalid', $number));
         $this->assertEquals($this->country, $validator->getCountry());
         $this->assertEquals($number, $validator->getNumber());
     }
 
     /**
-     * @return array
+     * Obtain a list of valid VAT numbers.
+     * @return array A dataset containing a list of valid numbers to check.
      */
-    public function getValidVatNumbers()
+    public function getValidVatNumbers() : array
     {
-        return [
-            [123456789],
-            ['123456789'],
-        ];
+        $dataset = preg_split('/\r\n|\r|\n/', file_get_contents('../Dataset/Portugal/valid.txt'));
+
+        $dataset = array_map(function($number) {
+            return [$number];
+        }, $dataset);
+
+        return $dataset;
     }
 
     /**
-     * @return array
+     * Obtain a list of invalid VAT numbers.
+     * @return array A dataset containing a list of invalid numbers to check.
      */
-    public function getInvalidVatNumbers()
+    public function getInvalidVatNumbers() : array
     {
-        return [
-            [919191919],
-            ['919191919'],
-        ];
+        $dataset = preg_split('/\r\n|\r|\n/', file_get_contents('../Dataset/Portugal/invalid.txt'));
+
+        $dataset = array_map(function($number) {
+            return [$number];
+        }, $dataset);
+
+        return $dataset;
     }
 }
