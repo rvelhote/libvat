@@ -36,7 +36,7 @@ class VatValidatorTest extends PHPUnit_Framework_TestCase
      * @param $country
      * @param $number
      */
-    public function testValidatorFactory($country, $number)
+    public function testValidatorFactoryValidVatNumbers($country, $number)
     {
         $validator = VatValidator::create($country.$number);
 
@@ -45,10 +45,45 @@ class VatValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($number, $validator->getNumber());
     }
 
-    public function getValidVatNumbers()
+    /**
+     * @dataProvider getInvalidVatNumbers
+     * @param $country
+     * @param $number
+     */
+    public function testValidatorFactoryInvalidVatNumbers($country, $number)
     {
-        return [
-            ['PT', 123456789]
-        ];
+        $validator = VatValidator::create($country.$number);
+
+        $this->assertFalse($validator->validate());
+        $this->assertEquals($country, $validator->getCountry());
+        $this->assertEquals($number, $validator->getNumber());
+    }
+
+    /**
+     * @return array
+     */
+    public function getValidVatNumbers() : array
+    {
+        $dataset = preg_split('/\r\n|\r|\n/', file_get_contents(__DIR__.'/Dataset/Portugal/valid.txt'));
+
+        $dataset = array_map(function($number) {
+            return ['PT', $number];
+        }, $dataset);
+
+        return $dataset;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInvalidVatNumbers() : array
+    {
+        $dataset = preg_split('/\r\n|\r|\n/', file_get_contents(__DIR__.'/Dataset/Portugal/invalid.txt'));
+
+        $dataset = array_map(function($number) {
+            return ['PT', $number];
+        }, $dataset);
+
+        return $dataset;
     }
 }

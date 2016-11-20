@@ -35,9 +35,9 @@ class VatValidator
      */
     public static function create(string $number) : VatProvider
     {
-        $number = mb_strtoupper(trim($number));
+        $number = trim($number);
 
-        $country = mb_substr($number, 0, 2);
+        $country = mb_strtoupper(mb_substr($number, 0, 2));
         $number = mb_substr($number, 2);
 
         $map = [

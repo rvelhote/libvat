@@ -70,7 +70,7 @@ class VatPortugalTest extends PHPUnit_Framework_TestCase
      */
     public function getValidVatNumbers() : array
     {
-        $dataset = preg_split('/\r\n|\r|\n/', file_get_contents('../Dataset/Portugal/valid.txt'));
+        $dataset = preg_split('/\r\n|\r|\n/', file_get_contents(__DIR__.'/../Dataset/Portugal/valid.txt'));
 
         $dataset = array_map(function($number) {
             return [$number];
@@ -85,7 +85,7 @@ class VatPortugalTest extends PHPUnit_Framework_TestCase
      */
     public function getInvalidVatNumbers() : array
     {
-        $dataset = preg_split('/\r\n|\r|\n/', file_get_contents('../Dataset/Portugal/invalid.txt'));
+        $dataset = preg_split('/\r\n|\r|\n/', file_get_contents(__DIR__.'/../Dataset/Portugal/invalid.txt'));
 
         $dataset = array_map(function($number) {
             return [$number];
