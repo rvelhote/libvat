@@ -64,8 +64,8 @@ class VatPortugal extends VatProvider
 
         $checkDigit = 0;
 
-        for($i = 0; $i < 8; $i++) {
-            $checkDigit += $this->number[$i] * (10 - $i - 1);
+        for($i = 0, $j = 9; $i < 8; $i++, $j--) {
+            $checkDigit += $this->number[$i] * $j;
         }
 
         $checkDigit = 11 - ($checkDigit % 11);
