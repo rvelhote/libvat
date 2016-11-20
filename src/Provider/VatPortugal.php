@@ -36,6 +36,11 @@ class VatPortugal extends VatProvider
     private $country = 'PT';
 
     /**
+     * @var array
+     */
+    private $digits = [1, 2, 5, 6, 7, 8, 9];
+
+    /**
      * Portugal constructor.
      * @param string $number
      */
@@ -45,33 +50,33 @@ class VatPortugal extends VatProvider
     }
 
     /**
-     *
+     * TODO Explain the algorithm
      */
     public function validate() : bool
     {
-        if (!is_numeric($this->number) || strlen($this->number)!=9) {
+        if (!is_numeric($this->number) || strlen($this->number) !== 9) {
             return false;
         }
 
-        $nifSplit = str_split($this->number);
+        if(!in_array($this->number[0], $this->digits)) {
+            return false;
+        }
 
-        if (in_array($nifSplit[0], array(1, 2, 5, 6, 7, 8, 9))) {
-            $checkDigit=0;
-            for($i=0; $i<8; $i++) {
-                $checkDigit+=$nifSplit[$i]*(10-$i-1);
-            }
-            $checkDigit=11-($checkDigit % 11);
+        $checkDigit = 0;
 
-            if($checkDigit>=10) $checkDigit=0;
+        for($i = 0; $i < 8; $i++) {
+            $checkDigit += $this->number[$i] * (10 - $i - 1);
+        }
 
-            if ($checkDigit==$nifSplit[8]) {
-                return true;
-            } else {
-                return false;
-            }
+        $checkDigit = 11 - ($checkDigit % 11);
+        $checkDigit = ($checkDigit >= 10) ? 0 : $checkDigit;
+
+        if($checkDigit == $this->number[8]) {
+            return true;
         }
 
         return false;
+
     }
 
     /**

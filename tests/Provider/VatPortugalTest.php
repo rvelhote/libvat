@@ -67,6 +67,7 @@ class VatPortugalTest extends PHPUnit_Framework_TestCase
     {
         return [
             [123456789],
+            ['123456789'],
         ];
     }
 
@@ -77,6 +78,7 @@ class VatPortugalTest extends PHPUnit_Framework_TestCase
     {
         return [
             [919191919],
+            ['919191919'],
         ];
     }
 }
