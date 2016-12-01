@@ -65,9 +65,13 @@ class VatSpainTest extends PHPUnit_Framework_TestCase
      */
     public function getValidVatNumbers()
     {
-        return [
-            ['73547889F'],
-        ];
+        $dataset = preg_split('/\r\n|\r|\n/', file_get_contents(__DIR__.'/../Dataset/Spain/valid.txt'));
+
+        $dataset = array_map(function($number) {
+            return [$number];
+        }, $dataset);
+
+        return $dataset;
     }
 
     /**
@@ -75,8 +79,12 @@ class VatSpainTest extends PHPUnit_Framework_TestCase
      */
     public function getInvalidVatNumbers()
     {
-        return [
-            ['73547889M'],
-        ];
+        $dataset = preg_split('/\r\n|\r|\n/', file_get_contents(__DIR__.'/../Dataset/Spain/invalid.txt'));
+
+        $dataset = array_map(function($number) {
+            return [$number];
+        }, $dataset);
+
+        return $dataset;
     }
 }
