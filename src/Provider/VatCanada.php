@@ -22,6 +22,7 @@
  */
 namespace Welhott\Vatlidator\Provider;
 
+use Welhott\Vatlidator\CalculationTrait\DigitalRoot;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -30,6 +31,8 @@ use Welhott\Vatlidator\VatProvider;
  */
 class VatCanada extends VatProvider
 {
+    use DigitalRoot;
+
     /**
      * The ISO 3166-1 alpha-2 code that represents this country
      * @var string
@@ -69,19 +72,15 @@ class VatCanada extends VatProvider
             return false;
         }
 
-        $evenConcat = '';
-        $oddConcat = '';
+        $checkDigitChecksum = 0;
 
         for($i = 1, $j = 0; $i < 8; $i += 2, $j += 2) {
-            $evenConcat .= $this->number[$i] * 2;
-            $oddConcat .= $this->number[$j];
+            $checkDigitChecksum += ($this->digitalRoot($this->number[$i] * 2) + $this->digitalRoot($this->number[$j]));
         }
 
-        $checksum = array_sum(str_split($oddConcat)) + array_sum(str_split($evenConcat));
-        $calculatedCheckDigit = intval(mb_substr($checksum, -1));
-
+        $calculatedCheckDigit = intval(mb_substr($checkDigitChecksum, -1));
         if($calculatedCheckDigit !== 0) {
-            $calculatedCheckDigit = intval((ceil($checksum / 10.0) * 10.0) - $checksum);
+            $calculatedCheckDigit = intval((ceil($checkDigitChecksum / 10.0) * 10.0) - $checkDigitChecksum);
         }
 
         return $calculatedCheckDigit == $checkDigit;

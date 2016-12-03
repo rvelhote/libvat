@@ -22,6 +22,7 @@
  */
 namespace Welhott\Vatlidator\Provider;
 
+use Welhott\Vatlidator\CalculationTrait\DigitalRoot;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -30,6 +31,8 @@ use Welhott\Vatlidator\VatProvider;
  */
 class VatAustria extends VatProvider
 {
+    use DigitalRoot;
+
     /**
      * The ISO 3166-1 alpha-2 code that represents this country
      * @var string
@@ -61,7 +64,9 @@ class VatAustria extends VatProvider
     /**
      *
      * @return bool True if the number is valid, false if it's not.
-     * @see http://www.metca.com/products/sin-bn-validator
+     *
+     * @see http://zylla.wipos.p.lodz.pl/ut/translation.html
+     * @see https://en.wikipedia.org/wiki/Digital_root
      */
     public function validate() : bool
     {
@@ -78,7 +83,7 @@ class VatAustria extends VatProvider
 
         // Exclude the first char and the last number which is the check digit.
         for ($i = 1, $j = 0; $i <= self::LENGTH - 2; $i++, $j++) {
-            $calculatedCheckDigit += array_sum(str_split($this->number[$i] * $this->multipliers[$j]));
+            $calculatedCheckDigit += $this->digitalRoot($this->number[$i] * $this->multipliers[$j]);
         }
 
         $calculatedCheckDigit = (96 - $calculatedCheckDigit) % self::MODULUS;
