@@ -55,102 +55,36 @@ class VatCanada extends VatProvider
      */
     public function validate() : bool
     {
-        $bn = $this->number;
-        // function to validate a Canadian CRA Busines Number (BN)
-        // Note: same checkdigit formula as SIN validation applies to BN
+        $checkDigit = intval(mb_substr($this->number, -1));
 
-        // initialize validation variable to true
-        $valid = true;
-        $msg = "";
-
-        // trim whitespace at beginning and end of string
-        //bn = bn.trim();
-
-        // trim extra whitespace from string
-        // Note: this function will trim ALL whitespace from string vs prev function which only trimmed
-        // from beginning and end of string.
-        // Requires trim() function in genfunc.js to be included as external script file
-        $bn = trim($bn);
-
-        // Remove non-numeric characters.
-        // Note: Only use this if we want to fix input errors without alerting user to the error.  Probably not a useful thing
-        // to do since the string probably won't pass the required test for 9 characters or the checkdigit - better to alert the
-        // user to the fact that they input non-numeric data.
-        // bn = numericOnly(bn);	// function (will work in v3 browsers)
-        // bn = bn.replace(/(\D)+/g,"");	// (will not work in v3 browsers)
-
-        // must be 9 characters (digits)
-        $digits = mb_strlen($bn);
-        if ($digits != 9) {
-            $valid = false;
-        } else {
-            if (preg_match('/^\d+$/', $bn) !== 1)    // must contain ONLY digits 0-9
-            {
-                $valid = false;
-            } else {
-                if ($bn == "000000000")        // for use when unknown SIN only
-                {
-                    $msg = "000000000 may be used only when BN is unknown - please revalidate when BN is available";
-                } else {    // perform the checkdigit validation routine
-
-                    // last (9th) digit is the check digit
-                    $checkdigit = mb_substr($bn, -1);
-
-                    // Double the even-numbered position digits (pos 2,4,6 & 8)
-                    $double2 = intval($bn[1]) * 2;
-                    $double4 = intval($bn[3]) * 2;
-                    $double6 = intval($bn[5]) * 2;
-                    $double8 = intval($bn[7]) * 2;
-
-                    // concatenate the doubles into one number string
-                    $num1 = $double2 . $double4 . $double6 . $double8;
-
-                    // Extract the odd-numbered position digits
-                    $digit1 = $bn[0];
-                    $digit3 = $bn[2];
-                    $digit5 = $bn[4];
-                    $digit7 = $bn[6];
-
-                    // concatenate the digits into one number string
-                    $num2 = $digit1 . $digit3 . $digit5 . $digit7;
-
-                    // sum the digits in num1
-                    $crossadd1 = 0;
-                    $position = 0;
-                    for ($position = 0; $position < strlen($num1); $position++) {
-                        $crossadd1 = $crossadd1 + intval(substr($num1, $position, 1));
-                    }
-
-                    // sum the digits in num2
-                    $crossadd2 = 0;
-                    for ($position = 0; $position < strlen($num2); $position++) {
-                        $crossadd2 = $crossadd2 + intval(substr($num2, $position, 1));
-                    }
-
-                    // add the two sums
-                    $checksum1 = $crossadd1 + $crossadd2;
-                    $checksum2 = 0;
-                    $checkdigitX = 0;
-
-                    if (substr($checksum1, strlen($checksum1) - 1) == "0") {
-                        $checksum2 = $checksum1;
-                        $checkdigitX = '0';
-                    } else {
-                        $checksum2 = (ceil($checksum1 / 10.0) * 10.0);
-                        $checkdigitX = floatval($checksum2 - $checksum1);
-                    }
-
-                    if ($checkdigitX == $checkdigit) {
-                        $valid = true;
-                    } else {
-                        $valid = false;
-                    }
-
-                }
-            }
+        if(mb_strlen($this->number) !== 9) {
+            return false;
         }
 
-        return $valid;
+        if(!is_numeric($this->number)) {
+            return false;
+        }
+
+        if($this->number === '000000000') {
+            return false;
+        }
+
+        $evenConcat = '';
+        $oddConcat = '';
+
+        for($i = 1, $j = 0; $i < 8; $i += 2, $j += 2) {
+            $evenConcat .= $this->number[$i] * 2;
+            $oddConcat .= $this->number[$j];
+        }
+
+        $checksum = array_sum(str_split($oddConcat)) + array_sum(str_split($evenConcat));
+        $calculatedCheckDigit = intval(mb_substr($checksum, -1));
+
+        if($calculatedCheckDigit !== 0) {
+            $calculatedCheckDigit = intval((ceil($checksum / 10.0) * 10.0) - $checksum);
+        }
+
+        return $calculatedCheckDigit == $checkDigit;
     }
 
     /**
