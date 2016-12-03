@@ -56,7 +56,7 @@ class VatAustria extends VatProvider
      * Each digit will be multiplied by a digit in this array in the equivalent position.
      * @var array
      */
-    private $multipliers = [0, 1, 2, 1, 2, 1, 2, 1];
+    private $multipliers = [1, 2, 1, 2, 1, 2, 1];
 
     /**
      *
@@ -68,20 +68,21 @@ class VatAustria extends VatProvider
         $checkDigit = intval(mb_substr($this->number, -1));
         $calculatedCheckDigit = 0;
 
-        if(mb_strlen($this->number) !== self::LENGTH) {
+        if (mb_strlen($this->number) !== self::LENGTH) {
             return false;
         }
 
-        if($this->number[0] !== 'U') {
+        if ($this->number[0] !== 'U') {
             return false;
         }
 
         // Exclude the first char and the last number which is the check digit.
-        for($i = 1; $i <= self::LENGTH - 2; $i++) {
-            $calculatedCheckDigit += $this->number[$i] * $this->multipliers[$i];
+        for ($i = 1, $j = 0; $i <= self::LENGTH - 2; $i++, $j++) {
+            $calculatedCheckDigit += array_sum(str_split($this->number[$i] * $this->multipliers[$j]));
         }
 
-        return $checkDigit === ($calculatedCheckDigit % self::MODULUS);
+        $calculatedCheckDigit = (96 - $calculatedCheckDigit) % self::MODULUS;
+        return $checkDigit === $calculatedCheckDigit;
     }
 
     /**
