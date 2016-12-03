@@ -49,7 +49,7 @@ class VatCanada extends VatProvider
      * Each digit will be multiplied by a digit in this array in the equivalent position.
      * @var array
      */
-    private $multipliers = [3, 2, 7, 6, 5, 4, 3, 2];
+    private $multipliers = [1, 2, 1, 2, 1, 2, 1, 2];
 
     /**
      *
@@ -73,9 +73,8 @@ class VatCanada extends VatProvider
         }
 
         $checkDigitChecksum = 0;
-
-        for($i = 1, $j = 0; $i < 8; $i += 2, $j += 2) {
-            $checkDigitChecksum += ($this->digitalRoot($this->number[$i] * 2) + $this->digitalRoot($this->number[$j]));
+        for($i = 0; $i < 8; $i++) {
+            $checkDigitChecksum += $this->digitalRoot($this->number[$i] * $this->multipliers[$i]);
         }
 
         $calculatedCheckDigit = intval(mb_substr($checkDigitChecksum, -1));
