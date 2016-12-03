@@ -37,6 +37,12 @@ class VatPoland extends VatProvider
     private $country = 'PL';
 
     /**
+     * The abbreviation of the VAT number according the the country's language.
+     * @var string
+     */
+    private $abbreviation = 'NIP';
+
+    /**
      * Each digit will be multiplied by a digit in this array in the equivalent position.
      * @var array
      */
@@ -87,5 +93,13 @@ class VatPoland extends VatProvider
     public function getCountry() : string
     {
         return $this->country;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAbbreviation() : string
+    {
+        return $this->abbreviation;
     }
 }

@@ -38,6 +38,18 @@ class VatSpain extends VatProvider
     private $country = 'ES';
 
     /**
+     * The abbreviation of the VAT number according the the country's language. This abbreviation represents people.
+     * @var string
+     */
+    private $abbreviation = 'NIP';
+
+    /**
+     * The abbreviation of the VAT number according the the country's language. This abbreviation represents companies.
+     * @var string
+     */
+    private $abbreviationCompanies = 'CIF';
+
+    /**
      * The list of valid control characters for the VAT number.
      * Letters such as I, Ñ, O, U are discarded to avoid confusion with other similar character (e.g. N, 1, l).
      * @var string
@@ -228,5 +240,14 @@ class VatSpain extends VatProvider
     public function getCountry() : string
     {
         return $this->country;
+    }
+
+    /**
+     * @return string
+     * TODO The designation is different for persons and companies.
+     */
+    public function getAbbreviation() : string
+    {
+        return $this->abbreviation;
     }
 }

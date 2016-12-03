@@ -60,4 +60,9 @@ abstract class VatProvider
      * @return string An ISO 3166-1 alpha-2 code that represents this country.
      */
     public abstract function getCountry() : string;
+
+    /**
+     * @return string
+     */
+    public abstract function getAbbreviation() : string;
 }

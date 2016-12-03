@@ -37,6 +37,18 @@ class VatPortugal extends VatProvider
     private $country = 'PT';
 
     /**
+     * The abbreviation of the VAT number for singular people.
+     * @var string
+     */
+    private $abbreviationPerson = 'NIF';
+
+    /**
+     * The abbreviation of the VAT number for companier.
+     * @var string
+     */
+    private $abbreviationCompany = 'NIPC';
+
+    /**
      * The list of valid first digits according to the portuguese NIF rules.
      * @var array
      */
@@ -128,5 +140,23 @@ class VatPortugal extends VatProvider
     public function getCountry() : string
     {
         return $this->country;
+    }
+
+    /**
+     * Obtain the abbreviation for this VAT number. The abbreviation varies depending on the first digit of the number.
+     *
+     * 0 - 4: People
+     * 5 - 9: Companies
+     *
+     * Although 0, 3 and 4 are not used or are invalid I preferred to return the designation for people.
+     *
+     * @return string The abreviation of the VAT number according the the country locale.
+     */
+    public function getAbbreviation() : string
+    {
+        $firstDigit = intval(substr($this->number, 0, 1));
+        $person = [0, 1, 2, 3, 4];
+
+        return in_array($firstDigit, $person) ? $this->abbreviationPerson : $this->abbreviationCompany;
     }
 }
