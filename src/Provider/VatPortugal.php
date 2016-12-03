@@ -31,15 +31,22 @@ use Welhott\Vatlidator\VatProvider;
 class VatPortugal extends VatProvider
 {
     /**
-     * The ISO 3166-1 alpha-2 code that represents this country
+     * The ISO 3166-1 alpha-2 code that represents this country.
      * @var string
      */
     private $country = 'PT';
 
     /**
+     * The list of valid first digits according to the portuguese NIF rules.
      * @var array
      */
-    private $digits = [1, 2, 5, 6, 7, 8, 9];
+    private $validFirstDigits = [1, 2, 5, 6, 7, 8, 9];
+
+    /**
+     * The list of valid multipliers for the validation algorithm.
+     * @var array
+     */
+    private $multipliers = [9, 8, 7, 6, 5, 4, 3, 2];
 
     /**
      * NOTE: This was a direct automated translation of the Portuguese Wikipedia article.
@@ -91,29 +98,27 @@ class VatPortugal extends VatProvider
      */
     public function validate() : bool
     {
+        $calculatedCheckDigit = 0;
+
+        $firstDigit = intval(substr($this->number, 0, 1));
+        $checkDigit = intval(substr($this->number, -1));
+
         if (!is_numeric($this->number) || strlen($this->number) !== 9) {
             return false;
         }
 
-        if(!in_array($this->number[0], $this->digits)) {
+        if(!in_array($firstDigit, $this->validFirstDigits)) {
             return false;
         }
 
-        $checkDigit = 0;
-
-        for($i = 0, $j = 9; $i < 8; $i++, $j--) {
-            $checkDigit += $this->number[$i] * $j;
+        for($i = 0; $i < 8; $i++) {
+            $calculatedCheckDigit += $this->number[$i] * $this->multipliers[$i];
         }
 
-        $checkDigit = 11 - ($checkDigit % 11);
-        $checkDigit = ($checkDigit >= 10) ? 0 : $checkDigit;
+        $calculatedCheckDigit = 11 - ($calculatedCheckDigit % 11);
+        $calculatedCheckDigit = ($calculatedCheckDigit >= 10) ? 0 : $calculatedCheckDigit;
 
-        if($checkDigit == $this->number[8]) {
-            return true;
-        }
-
-        return false;
-
+        return $calculatedCheckDigit === $checkDigit;
     }
 
     /**
