@@ -77,6 +77,14 @@ class VatPoland extends VatProvider
         $controlChar = intval(mb_substr($this->number, -1));
         $total = 0;
 
+        if(!is_numeric($this->number)) {
+            return false;
+        }
+
+        if(mb_strlen($this->number) !== 10) {
+            return false;
+        }
+
         for ($i = 0; $i < 9; $i++) {
             $total += $this->number[$i] * $this->multipliers[$i];
         }
