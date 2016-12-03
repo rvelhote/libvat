@@ -31,6 +31,7 @@ use Welhott\Vatlidator\VatProvider;
 class VatPortugal extends VatProvider
 {
     /**
+     * The ISO 3166-1 alpha-2 code that represents this country
      * @var string
      */
     private $country = 'PT';
@@ -41,8 +42,33 @@ class VatPortugal extends VatProvider
     private $digits = [1, 2, 5, 6, 7, 8, 9];
 
     /**
-     * Portugal constructor.
-     * @param string $number
+     * NOTE: This was a direct automated translation of the Portuguese Wikipedia article.
+     *
+     * It consists of nine digits, the first eight being sequential and the last one being a check digit.
+     *
+     * The NIF may belong to one of several ranges of numbers, defined by the initial digits, with the following
+     * interpretations [1]:
+     * - 1 to 3: Natural person, 3 is not yet allocated
+     * - 45: Person singular. The initial figures "45" correspond to non-resident citizens who only obtain income in
+     * Portugal definitively subject to withholding tax.
+     * - 5: legal person required to register in the National Registry of Legal Persons; [3]
+     * - 6: Organization of Central, Regional or Local Public Administration;
+     * - 70, 74 and 75: Inheritance Indivisa, in which the successor was not an individual entrepreneur, or Indivisa
+     * Inheritance in which the surviving spouse has commercial income;
+     * - 71: Non-resident residents subject to final withholding tax.
+     * - 72: Investment funds.
+     * - 77: Informal allocation of taxpayer NIF (entities that do not require NIF with RNPC).
+     * - 78: Informal allocation to non-residents covered by VAT REFUND.
+     * - 79: Exceptional regime - Expo 98.
+     * - 8: "sole proprietorship" (no longer used, no longer valid);
+     * - 90 and 91: Condos, Irregular Companies, Indivisible Inheritances whose successor was an individual entrepreneur.
+     * - 98: Non-residents without a permanent establishment.
+     * - 99: Civil partnerships without legal personality.
+     *
+     * The ninth and last digit is the control digit. It is calculated using the module 11 algorithm.
+     *
+     * @param string $number The VAT number to process
+     * @see https://pt.wikipedia.org/wiki/N%C3%BAmero_de_identifica%C3%A7%C3%A3o_fiscal
      */
     public function __construct(string $number)
     {
@@ -50,7 +76,18 @@ class VatPortugal extends VatProvider
     }
 
     /**
-     * TODO Explain the algorithm
+     * NOTE: This was a direct automated translation of the Portuguese Wikipedia article.
+     *
+     * The NIF has 9 digits, the last one being the control digit. To calculate the control digit:
+     * 1. Multiply the 8th digit by 2, the 7th digit by 3, the 6th digit by 4, the 5th digit by 5, the 4th digit by 6,
+     * the 3rd digit by 7, the 2nd digit by 8, and 1st digit by 9
+     * 2. Add results
+     * 3. Compute Module 11 of the result, that is, the remainder of the division of the number by 11.
+     *
+     * If the remainder is 0 or 1, the control digit will be 0
+     * If it is another digit x, the control digit will be the result of 11 - x
+     *
+     * @see https://pt.wikipedia.org/wiki/N%C3%BAmero_de_identifica%C3%A7%C3%A3o_fiscal
      */
     public function validate() : bool
     {
@@ -80,7 +117,8 @@ class VatPortugal extends VatProvider
     }
 
     /**
-     * @return string
+     * Obtain the country code that represents this country.
+     * @return string An ISO 3166-1 alpha-2 code that represents this country.
      */
     public function getCountry() : string
     {

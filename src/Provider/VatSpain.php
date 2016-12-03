@@ -32,7 +32,7 @@ use Welhott\Vatlidator\VatProvider;
 class VatSpain extends VatProvider
 {
     /**
-     * The country code of this country.
+     * The ISO 3166-1 alpha-2 code that represents this country
      * @var string
      */
     private $country = 'ES';
