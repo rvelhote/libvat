@@ -28,7 +28,7 @@ use PHPUnit_Framework_TestCase;
  * Class VatValidatorTest
  * @package Welhott\Vatlidator\Tests
  */
-class BaseVatValidationTest extends PHPUnit_Framework_TestCase
+class BaseVatValidationTest extends PHPUnit_Framework_TestCase implements BaseVatValidationInterface
 {
     /**
      *
@@ -57,7 +57,7 @@ class BaseVatValidationTest extends PHPUnit_Framework_TestCase
      * @param string $country
      * @return array
      */
-    protected function getValidDataset(string $country) {
+    public function getValidDataset(string $country) {
         return $this->getDatasetFromFile($country, 'valid');
     }
 
@@ -65,7 +65,7 @@ class BaseVatValidationTest extends PHPUnit_Framework_TestCase
      * @param string $country
      * @return array
      */
-    protected function getInvalidDataset(string $country) {
+    public function getInvalidDataset(string $country) {
         return $this->getDatasetFromFile($country, 'invalid');
     }
 

@@ -23,13 +23,14 @@
 namespace Welhott\Vatlidator\Tests\Provider;
 
 use Welhott\Vatlidator\Provider\VatPortugal;
+use Welhott\Vatlidator\Tests\BaseVatValidationInterface;
 use Welhott\Vatlidator\Tests\BaseVatValidationTest;
 
 /**
  * Class VatPortugalTest
  * @package Welhott\Vatlidator\Provider\Tests
  */
-class VatPortugalTest extends BaseVatValidationTest
+class VatPortugalTest extends BaseVatValidationTest implements BaseVatValidationInterface
 {
     /**
      * @var string

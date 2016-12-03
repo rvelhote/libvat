@@ -32,11 +32,11 @@ interface BaseVatValidationInterface
      * Obtain a list of valid VAT numbers.
      * @return array A dataset containing a list of valid numbers to check.
      */
-    public function getValidDataset();
+    public function getValidDataset(string $country);
 
     /**
      * Obtain a list of invalid VAT numbers.
      * @return array A dataset containing a list of invalid numbers to check.
      */
-    public function getInvalidDataset();
+    public function getInvalidDataset(string $country);
 }
