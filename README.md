@@ -15,6 +15,9 @@ Supported Countries
 This PHP library is still very much a work in progress and I am adding tests and (as much as possible) finding 
 documentation about each country and algorithm before proceeding to the next country.
 
+- Austria
+- Canada
+- Norway
 - Poland
 - Portugal
 - Spain
