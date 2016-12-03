@@ -20,66 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace Welhott\Vatlidator\Tests\Provider;
-
-use Welhott\Vatlidator\Provider\VatPoland;
-use Welhott\Vatlidator\Tests\BaseVatValidationTest;
+namespace Welhott\Vatlidator\Tests;
 
 /**
- * Class VatPolandTest
- * @package Welhott\Vatlidator\Provider\Tests
+ * Class BaseVatValidationInterface
+ * @package Welhott\Vatlidator\Tests
  */
-class VatPolandTest extends BaseVatValidationTest
+interface BaseVatValidationInterface
 {
-    /**
-     * @var string
-     */
-    private $country = 'PL';
-
-    /**
-     * @var string
-     */
-    private $countryName = 'Poland';
-
-    /**
-     * @dataProvider getValidVatNumbers
-     */
-    public function testValidPolishVat($number)
-    {
-        $validator = new VatPoland($number);
-
-        $this->assertTrue($validator->validate());
-        $this->assertEquals($this->country, $validator->getCountry());
-        $this->assertEquals($number, $validator->getNumber());
-    }
-
-    /**
-     * @dataProvider getInvalidVatNumbers
-     */
-    public function testInvalidPolishVat($number)
-    {
-        $validator = new VatPoland($number);
-
-        $this->assertFalse($validator->validate());
-        $this->assertEquals($this->country, $validator->getCountry());
-        $this->assertEquals($number, $validator->getNumber());
-    }
-
     /**
      * Obtain a list of valid VAT numbers.
      * @return array A dataset containing a list of valid numbers to check.
      */
-    public function getValidVatNumbers()
-    {
-        return $this->getValidDataset($this->countryName);
-    }
+    public function getValidDataset();
 
     /**
      * Obtain a list of invalid VAT numbers.
      * @return array A dataset containing a list of invalid numbers to check.
      */
-    public function getInvalidVatNumbers()
-    {
-        return $this->getInvalidDataset($this->countryName);
-    }
+    public function getInvalidDataset();
 }

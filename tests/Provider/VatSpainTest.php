@@ -22,19 +22,24 @@
  */
 namespace Welhott\Vatlidator\Tests\Provider;
 
-use PHPUnit_Framework_TestCase;
 use Welhott\Vatlidator\Provider\VatSpain;
+use Welhott\Vatlidator\Tests\BaseVatValidationTest;
 
 /**
  * Class VatSpainTest
  * @package Welhott\Vatlidator\Provider\Tests
  */
-class VatSpainTest extends PHPUnit_Framework_TestCase
+class VatSpainTest extends BaseVatValidationTest
 {
     /**
      * @var string
      */
     private $country = 'ES';
+
+    /**
+     * @var string
+     */
+    private $countryName = 'Spain';
 
     /**
      * @dataProvider getValidVatNumbers
@@ -61,30 +66,20 @@ class VatSpainTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return array
+     * Obtain a list of valid VAT numbers.
+     * @return array A dataset containing a list of valid numbers to check.
      */
     public function getValidVatNumbers()
     {
-        $dataset = preg_split('/\r\n|\r|\n/', file_get_contents(__DIR__.'/../Dataset/Spain/valid.txt'));
-
-        $dataset = array_map(function($number) {
-            return [$number];
-        }, $dataset);
-
-        return $dataset;
+        return $this->getValidDataset($this->countryName);
     }
 
     /**
-     * @return array
+     * Obtain a list of invalid VAT numbers.
+     * @return array A dataset containing a list of invalid numbers to check.
      */
     public function getInvalidVatNumbers()
     {
-        $dataset = preg_split('/\r\n|\r|\n/', file_get_contents(__DIR__.'/../Dataset/Spain/invalid.txt'));
-
-        $dataset = array_map(function($number) {
-            return [$number];
-        }, $dataset);
-
-        return $dataset;
+        return $this->getInvalidDataset($this->countryName);
     }
 }
