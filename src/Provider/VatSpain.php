@@ -193,15 +193,16 @@ class VatSpain extends VatProvider
 
         $number = $this->number;
         $firstChar = $this->number[0];
-        $controlChar = mb_substr($this->number, -1);
 
+        $controlChar = mb_substr($this->number, -1);
         $number[0] = array_key_exists($firstChar, $foreigner) ? $foreigner[$firstChar] : $firstChar;
 
         if(in_array($firstChar, $child) || in_array($firstChar, $transitory)) {
             $number = mb_substr($this->number, 1);
         }
 
-        return isset($this->chars[$number % 23]) && $controlChar == $this->chars[$number % 23];
+        $partial = mb_substr($number, 0, -1);
+        return isset($this->chars[$partial % 23]) && $controlChar == $this->chars[$partial % 23];
     }
 
     /**
