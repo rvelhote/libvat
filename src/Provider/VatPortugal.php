@@ -154,9 +154,6 @@ class VatPortugal extends VatProvider
      */
     public function getAbbreviation() : string
     {
-        $firstDigit = intval(substr($this->number, 0, 1));
-        $person = [0, 1, 2, 3, 4];
-
-        return in_array($firstDigit, $person) ? $this->abbreviationPerson : $this->abbreviationCompany;
+        return $this->abbreviationPerson;
     }
 }

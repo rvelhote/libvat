@@ -43,6 +43,11 @@ class VatCanadaTest extends BaseVatValidationTest implements BaseVatValidationIn
     private $countryName = 'Canada';
 
     /**
+     * @var string
+     */
+    private $abbreviation = 'BN';
+
+    /**
      * @dataProvider getValidVatNumbers
      */
     public function testValidCanadianVat($number)
@@ -52,6 +57,7 @@ class VatCanadaTest extends BaseVatValidationTest implements BaseVatValidationIn
         $this->assertTrue($validator->validate(), sprintf('%d should be valid', $number));
         $this->assertEquals($this->country, $validator->getCountry());
         $this->assertEquals($number, $validator->getNumber());
+        $this->assertEquals($this->abbreviation, $validator->getAbbreviation());
     }
 
     /**

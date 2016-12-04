@@ -43,6 +43,11 @@ class VatPortugalTest extends BaseVatValidationTest implements BaseVatValidation
     private $countryName = 'Portugal';
 
     /**
+     * @var string
+     */
+    private $abbreviation = 'NIF';
+
+    /**
      * @test Confirm that the provided VAT number for Portugal is valid.
      * @dataProvider getValidVatNumbers
      * @param string $number The number to validate from the dataProvider
@@ -54,6 +59,7 @@ class VatPortugalTest extends BaseVatValidationTest implements BaseVatValidation
         $this->assertTrue($validator->validate());
         $this->assertEquals($this->country, $validator->getCountry());
         $this->assertEquals($number, $validator->getNumber());
+        $this->assertEquals($this->abbreviation, $validator->getAbbreviation());
     }
 
     /**

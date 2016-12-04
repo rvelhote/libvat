@@ -43,6 +43,11 @@ class VatPolandTest extends BaseVatValidationTest implements BaseVatValidationIn
     private $countryName = 'Poland';
 
     /**
+     * @var string
+     */
+    private $abbreviation = 'NIP';
+
+    /**
      * @dataProvider getValidVatNumbers
      */
     public function testValidPolishVat($number)
@@ -52,6 +57,7 @@ class VatPolandTest extends BaseVatValidationTest implements BaseVatValidationIn
         $this->assertTrue($validator->validate());
         $this->assertEquals($this->country, $validator->getCountry());
         $this->assertEquals($number, $validator->getNumber());
+        $this->assertEquals($this->abbreviation, $validator->getAbbreviation());
     }
 
     /**
