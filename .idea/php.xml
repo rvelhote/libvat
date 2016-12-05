@@ -4,7 +4,6 @@
   <component name="PhpUnit">
     <phpunit_settings>
       <PhpUnitSettings load_method="PHPUNIT_PHAR" custom_loader_path="" phpunit_phar_path="$PROJECT_DIR$/vendor/bin/phpunit" />
-      <phpunit_by_interpreter interpreter_id="97328ea5-0769-4cda-aedf-b0fd9c7d2560" load_method="PHPUNIT_PHAR" configuration_file_path="/opt/application/phpunit.xml" custom_loader_path="" phpunit_phar_path="/opt/application/vendor/bin/phpunit" use_configuration_file="true" />
     </phpunit_settings>
   </component>
 </project>
