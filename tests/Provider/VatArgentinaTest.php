@@ -23,7 +23,6 @@
 namespace Welhott\Vatlidator\Tests\Provider;
 
 use Welhott\Vatlidator\Provider\VatArgentina;
-use Welhott\Vatlidator\Provider\VatAustria;
 use Welhott\Vatlidator\Tests\BaseVatValidationInterface;
 use Welhott\Vatlidator\Tests\BaseVatValidationTest;
 
