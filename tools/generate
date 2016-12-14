@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Generate a class and tests for a specified country
+
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]
+  then
+    echo "Usage: generate [NameOfCountry] [CountryCode] [CountryAbbreviation]"
+    exit
+fi
+
+# Name the boyd
+country=$1
+countryCode=$2
+countryAbbreviation=$3
+
+# Directories where the files will be placed
+src='../src/Provider'
+tests='../tests/Provider'
+dataset='../tests/Dataset'
+
+# PHP files to be created
+srcDest=${src}/Vat${country}.php
+testDest=${tests}/Vat${country}Test.php
+
+# Copy the templates to the desinations
+cp VatCountry.template $srcDest
+cp VatCountryTest.template $testDest
+
+# Replace the strings in the files
+sed -i "s/{{Country}}/$country/g" $srcDest
+sed -i "s/{{CountryCode}}/$countryCode/g" $srcDest
+sed -i "s/{{CountryAbbreviation}}/$countryAbbreviation/g" $srcDest
+
+# Replace the strings in the files
+sed -i "s/{{Country}}/$country/g" $testDest
+sed -i "s/{{CountryCode}}/$countryCode/g" $testDest
+sed -i "s/{{CountryAbbreviation}}/$countryAbbreviation/g" $testDest
+
+# Create the directories for the test data
+mkdir $dataset/$country
+touch $dataset/$country/valid.txt
+touch $dataset/$country/invalid.txt
