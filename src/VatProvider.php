@@ -21,6 +21,11 @@
  * SOFTWARE.
  */
 namespace Welhott\Vatlidator;
+use Welhott\Vatlidator\Cleaner\Country;
+use Welhott\Vatlidator\Cleaner\ExtraCharacters;
+use Welhott\Vatlidator\Cleaner\CleanerInterface;
+use Welhott\Vatlidator\Cleaner\Trim;
+use Welhott\Vatlidator\Cleaner\Uppercase;
 
 /**
  * Interface VatProviderInterface
@@ -29,9 +34,15 @@ namespace Welhott\Vatlidator;
 abstract class VatProvider
 {
     /**
+     * The VAT number as a string because multiple providers have letters and also it's easier to work with the number.
      * @var string
      */
     protected $number;
+
+    /**
+     * @var string
+     */
+    protected $cleanNumber;
 
     /**
      * VatProvider constructor.
@@ -40,6 +51,22 @@ abstract class VatProvider
     public function __construct(string $number)
     {
         $this->number = $number;
+        $this->cleanNumber = $this->clean($number);
+    }
+
+    /**
+     * @param string $number
+     * @return string
+     */
+    protected function clean(string $number) : string
+    {
+        $transformers = [new Trim(), new Uppercase(), new ExtraCharacters(), new Country()];
+
+        $callback = function(string $number, CleanerInterface $transformer) {
+            return $transformer->transform($number);
+        };
+
+        return array_reduce($transformers, $callback, $number);
     }
 
     /**
@@ -53,6 +80,14 @@ abstract class VatProvider
     public function getNumber() : string
     {
         return $this->number;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOriginalNumber() : string
+    {
+        return $this->originalNumber;
     }
 
     /**

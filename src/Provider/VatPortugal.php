@@ -112,10 +112,10 @@ class VatPortugal extends VatProvider
     {
         $calculatedCheckDigit = 0;
 
-        $firstDigit = intval(substr($this->number, 0, 1));
-        $checkDigit = intval(substr($this->number, -1));
+        $firstDigit = intval(substr($this->cleanNumber, 0, 1));
+        $checkDigit = intval(substr($this->cleanNumber, -1));
 
-        if (!is_numeric($this->number) || strlen($this->number) !== 9) {
+        if (!is_numeric($this->cleanNumber) || strlen($this->cleanNumber) !== 9) {
             return false;
         }
 
@@ -124,7 +124,7 @@ class VatPortugal extends VatProvider
         }
 
         for($i = 0; $i < 8; $i++) {
-            $calculatedCheckDigit += $this->number[$i] * $this->multipliers[$i];
+            $calculatedCheckDigit += $this->cleanNumber[$i] * $this->multipliers[$i];
         }
 
         $calculatedCheckDigit = 11 - ($calculatedCheckDigit % 11);

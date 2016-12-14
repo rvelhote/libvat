@@ -44,19 +44,31 @@ class VatBelgium extends VatProvider
     private $abbreviation = 'TVA';
 
     /**
+     * VatBelgium constructor.
+     * @param string $number
+     */
+    public function __construct($number)
+    {
+        parent::__construct($number);
+
+        if(mb_strlen($this->cleanNumber) === 9) {
+            $this->cleanNumber = str_pad($this->cleanNumber, 10, 0, STR_PAD_LEFT);
+        }
+    }
+
+    /**
      *
      * @return bool True if the number is valid, false if it's not.
      */
     public function validate() : bool
     {
-        $number = mb_strlen($this->number) === 9 ? str_pad($this->number, 10, 0, STR_PAD_LEFT) : $this->number;
-        $firstDigit = intval($number[0]);
+        $firstDigit = intval($this->cleanNumber[0]);
 
-        if(!is_numeric($number)) {
+        if(!is_numeric($this->cleanNumber)) {
             return false;
         }
 
-        if(mb_strlen($number) !== 10) {
+        if(mb_strlen($this->cleanNumber) !== 10) {
             return false;
         }
 
@@ -64,8 +76,8 @@ class VatBelgium extends VatProvider
             return false;
         }
 
-        $numberWithoutCheck = intval(mb_substr($number, 0, 8));
-        $checkDigit = intval(mb_substr($number, 8));
+        $numberWithoutCheck = intval(mb_substr($this->cleanNumber, 0, 8));
+        $checkDigit = intval(mb_substr($this->cleanNumber, 8));
         $calculatedCheckDigit = 97 - $numberWithoutCheck % 97;
 
         return $calculatedCheckDigit === $checkDigit ;
