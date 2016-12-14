@@ -45,13 +45,20 @@ abstract class VatProvider
     protected $cleanNumber;
 
     /**
+     * @var CleanerInterface[]
+     */
+    private $cleaners = [];
+
+    /**
      * VatProvider constructor.
      * @param string $number
+     * @param CleanerInterface[] $cleaners
      */
-    public function __construct(string $number)
+    public function __construct(string $number, array $cleaners = [])
     {
         $this->number = $number;
         $this->cleanNumber = $this->clean($number);
+        $this->cleaners = [new Trim(), new Uppercase(), new ExtraCharacters(), new Country()] + $cleaners;
     }
 
     /**
@@ -60,13 +67,11 @@ abstract class VatProvider
      */
     protected function clean(string $number) : string
     {
-        $transformers = [new Trim(), new Uppercase(), new ExtraCharacters(), new Country()];
-
         $callback = function(string $number, CleanerInterface $transformer) {
             return $transformer->transform($number);
         };
 
-        return array_reduce($transformers, $callback, $number);
+        return array_reduce($this->cleaners, $callback, $number);
     }
 
     /**

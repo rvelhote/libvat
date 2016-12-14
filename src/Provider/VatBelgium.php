@@ -22,7 +22,6 @@
  */
 namespace Welhott\Vatlidator\Provider;
 
-use Welhott\Vatlidator\CalculationTrait\DigitalRoot;
 use Welhott\Vatlidator\VatProvider;
 
 /**
