@@ -74,19 +74,19 @@ class VatPoland extends VatProvider
      */
     public function validate() : bool
     {
-        $controlChar = intval(mb_substr($this->number, -1));
+        $controlChar = intval(mb_substr($this->cleanNumber, -1));
         $total = 0;
 
-        if(!is_numeric($this->number)) {
+        if(!is_numeric($this->cleanNumber)) {
             return false;
         }
 
-        if(mb_strlen($this->number) !== 10) {
+        if(mb_strlen($this->cleanNumber) !== 10) {
             return false;
         }
 
         for ($i = 0; $i < 9; $i++) {
-            $total += $this->number[$i] * $this->multipliers[$i];
+            $total += $this->cleanNumber[$i] * $this->multipliers[$i];
         }
 
         $total = (($total % 11) > 9) ? 0 : ($total % 11);

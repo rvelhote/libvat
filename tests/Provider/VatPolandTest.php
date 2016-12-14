@@ -54,7 +54,7 @@ class VatPolandTest extends BaseVatValidationTest implements BaseVatValidationIn
     {
         $validator = new VatPoland($number);
 
-        $this->assertTrue($validator->validate());
+        $this->assertTrue($validator->validate(), sprintf('%d should be valid', $number));
         $this->assertEquals($this->country, $validator->getCountry());
         $this->assertEquals($number, $validator->getNumber());
         $this->assertEquals($this->abbreviation, $validator->getAbbreviation());
@@ -67,7 +67,7 @@ class VatPolandTest extends BaseVatValidationTest implements BaseVatValidationIn
     {
         $validator = new VatPoland($number);
 
-        $this->assertFalse($validator->validate());
+        $this->assertFalse($validator->validate(), sprintf('%d should be invalid', $number));
         $this->assertEquals($this->country, $validator->getCountry());
         $this->assertEquals($number, $validator->getNumber());
     }

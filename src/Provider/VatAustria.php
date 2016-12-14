@@ -70,20 +70,20 @@ class VatAustria extends VatProvider
      */
     public function validate() : bool
     {
-        $checkDigit = intval(mb_substr($this->number, -1));
+        $checkDigit = intval(mb_substr($this->cleanNumber, -1));
         $calculatedCheckDigit = 0;
 
-        if (mb_strlen($this->number) !== self::LENGTH) {
+        if (mb_strlen($this->cleanNumber) !== self::LENGTH) {
             return false;
         }
 
-        if ($this->number[0] !== 'U') {
+        if ($this->cleanNumber[0] !== 'U') {
             return false;
         }
 
         // Exclude the first char and the last number which is the check digit.
         for ($i = 1, $j = 0; $i <= self::LENGTH - 2; $i++, $j++) {
-            $calculatedCheckDigit += $this->digitalRoot($this->number[$i] * $this->multipliers[$j]);
+            $calculatedCheckDigit += $this->digitalRoot($this->cleanNumber[$i] * $this->multipliers[$j]);
         }
 
         $calculatedCheckDigit = (96 - $calculatedCheckDigit) % self::MODULUS;

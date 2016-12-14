@@ -57,8 +57,8 @@ abstract class VatProvider
     public function __construct(string $number, array $cleaners = [])
     {
         $this->number = $number;
+        $this->cleaners = [new Trim(), new Uppercase(), new ExtraCharacters(), new Country()];
         $this->cleanNumber = $this->clean($number);
-        $this->cleaners = [new Trim(), new Uppercase(), new ExtraCharacters(), new Country()] + $cleaners;
     }
 
     /**
