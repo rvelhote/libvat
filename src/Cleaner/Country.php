@@ -30,6 +30,7 @@ class Country implements CleanerInterface
 {
     private $countries = [
         'AR',
+        'AU',
         'AT',
         'BE',
         'CA',
