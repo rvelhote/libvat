@@ -113,7 +113,6 @@ class VatPortugal extends VatProvider
         $calculatedCheckDigit = 0;
 
         $firstDigit = intval(substr($this->cleanNumber, 0, 1));
-        $checkDigit = intval(substr($this->cleanNumber, -1));
 
         if (!is_numeric($this->cleanNumber) || strlen($this->cleanNumber) !== 9) {
             return false;
@@ -130,7 +129,7 @@ class VatPortugal extends VatProvider
         $calculatedCheckDigit = 11 - ($calculatedCheckDigit % 11);
         $calculatedCheckDigit = ($calculatedCheckDigit >= 10) ? 0 : $calculatedCheckDigit;
 
-        return $calculatedCheckDigit === $checkDigit;
+        return $calculatedCheckDigit === $this->getCheckDigit();
     }
 
     /**

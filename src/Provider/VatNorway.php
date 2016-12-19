@@ -55,7 +55,6 @@ class VatNorway extends VatProvider
      */
     public function validate() : bool
     {
-        $controlDigit = intval(mb_substr($this->number, -1));
         $calculatedDigit = 0;
 
         if(!is_numeric($this->number)) {
@@ -79,7 +78,7 @@ class VatNorway extends VatProvider
             $calculatedDigit = '-';
         }
 
-        return $calculatedDigit === $controlDigit;
+        return $calculatedDigit === $this->getCheckDigit();
     }
 
 

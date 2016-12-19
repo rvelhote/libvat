@@ -70,7 +70,6 @@ class VatAustria extends VatProvider
      */
     public function validate() : bool
     {
-        $checkDigit = intval(mb_substr($this->cleanNumber, -1));
         $calculatedCheckDigit = 0;
 
         if (mb_strlen($this->cleanNumber) !== self::LENGTH) {
@@ -87,7 +86,7 @@ class VatAustria extends VatProvider
         }
 
         $calculatedCheckDigit = (96 - $calculatedCheckDigit) % self::MODULUS;
-        return $checkDigit === $calculatedCheckDigit;
+        return $this->getCheckDigit() === $calculatedCheckDigit;
     }
 
     /**

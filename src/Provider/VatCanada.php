@@ -58,8 +58,6 @@ class VatCanada extends VatProvider
      */
     public function validate() : bool
     {
-        $checkDigit = intval(mb_substr($this->number, -1));
-
         if(mb_strlen($this->number) !== 9) {
             return false;
         }
@@ -82,7 +80,7 @@ class VatCanada extends VatProvider
             $calculatedCheckDigit = intval((ceil($checkDigitChecksum / 10.0) * 10.0) - $checkDigitChecksum);
         }
 
-        return $calculatedCheckDigit == $checkDigit;
+        return $calculatedCheckDigit == $this->getCheckDigit();
     }
 
     /**

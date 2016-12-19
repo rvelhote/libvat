@@ -60,7 +60,6 @@ class VatColombia extends VatProvider
      */
     public function validate() : bool
     {
-        $checkDigit = intval(mb_substr($this->number, -1));
         $calculatedCheckDigit = 0;
 
         if(mb_strlen($this->number) < 10 || mb_strlen($this->number) > 16) {
@@ -83,7 +82,7 @@ class VatColombia extends VatProvider
             $calculatedCheckDigit = 11 - $calculatedCheckDigit;
         }
 
-        return $checkDigit === $calculatedCheckDigit;
+        return $this->getCheckDigit() === $calculatedCheckDigit;
     }
 
     /**

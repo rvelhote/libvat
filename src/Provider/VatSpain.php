@@ -120,14 +120,13 @@ class VatSpain extends VatProvider
      */
     private function validateNationalJuridicEntity() : bool
     {
-        $controlChar = substr($this->number, -1);
         $total = 10 - $this->calculateControlChar() % 10;
 
         if ($total == 10) {
             $total = 0;
         }
 
-        return $total == $controlChar;
+        return $total === $this->getCheckDigit();
     }
 
     /**
@@ -135,9 +134,8 @@ class VatSpain extends VatProvider
      */
     private function validateNonNationalJuridicEntity() : bool
     {
-        $controlChar = substr($this->number, -1);
         $total = chr((10 - $this->calculateControlChar() % 10) + 64);
-        return $total == $controlChar;
+        return $total === $this->getCheckChar();
     }
 
     /**
@@ -193,8 +191,6 @@ class VatSpain extends VatProvider
 
         $number = $this->number;
         $firstChar = $this->number[0];
-
-        $controlChar = mb_substr($this->number, -1);
         $number[0] = array_key_exists($firstChar, $foreigner) ? $foreigner[$firstChar] : $firstChar;
 
         if(in_array($firstChar, $child) || in_array($firstChar, $transitory)) {
@@ -202,7 +198,7 @@ class VatSpain extends VatProvider
         }
 
         $partial = mb_substr($number, 0, -1);
-        return isset($this->chars[$partial % 23]) && $controlChar == $this->chars[$partial % 23];
+        return isset($this->chars[$partial % 23]) && $this->getCheckChar() == $this->chars[$partial % 23];
     }
 
     /**

@@ -57,7 +57,6 @@ class VatGermany extends VatProvider
             return false;
         }
 
-        $checkDigit = mb_substr($this->cleanNumber, -1);
         $product = 10;
 
         for($i = 0; $i <  8; $i++) {
@@ -76,7 +75,7 @@ class VatGermany extends VatProvider
             $calculatedCheckDigit = 0;
         }
 
-        return $calculatedCheckDigit == $checkDigit;
+        return $calculatedCheckDigit === $this->getCheckDigit();
     }
 
     /**

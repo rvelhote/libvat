@@ -76,10 +76,9 @@ class VatBelgium extends VatProvider
         }
 
         $numberWithoutCheck = intval(mb_substr($this->cleanNumber, 0, 8));
-        $checkDigit = intval(mb_substr($this->cleanNumber, 8));
         $calculatedCheckDigit = 97 - $numberWithoutCheck % 97;
 
-        return $calculatedCheckDigit === $checkDigit ;
+        return $calculatedCheckDigit === $this->getCheckDigit(2);
     }
 
     /**

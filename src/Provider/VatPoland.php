@@ -74,7 +74,6 @@ class VatPoland extends VatProvider
      */
     public function validate() : bool
     {
-        $controlChar = intval(mb_substr($this->cleanNumber, -1));
         $total = 0;
 
         if(!is_numeric($this->cleanNumber)) {
@@ -90,7 +89,7 @@ class VatPoland extends VatProvider
         }
 
         $total = (($total % 11) > 9) ? 0 : ($total % 11);
-        return $total === $controlChar;
+        return $total === $this->getCheckDigit();
     }
 
 
