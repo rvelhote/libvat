@@ -43,12 +43,32 @@ class VatAlbania extends VatProvider
     private $abbreviation = 'NIPT';
 
     /**
-     *
+     * @var array
+     */
+    private $firstLetters = ['J', 'K', 'L'];
+
+    /**
+     * 10 characters, the first position following the prefix is "J", "K" or "L" and the last character is a letter.
+     *  - (AL)K99999999L or (AL)J99999999L (L = Letter)
      * @return bool True if the number is valid, false if it's not.
      */
     public function validate() : bool
     {
-        return false;
+        $checkLetter = mb_substr($this->cleanNumber, -1);
+
+        if(mb_strlen($this->cleanNumber) !== 10) {
+            return false;
+        }
+
+        if(!in_array($this->cleanNumber[0], $this->firstLetters)) {
+            return false;
+        }
+
+        if(!ctype_alpha($checkLetter)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
