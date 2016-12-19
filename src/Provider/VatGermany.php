@@ -45,10 +45,38 @@ class VatGermany extends VatProvider
     /**
      *
      * @return bool True if the number is valid, false if it's not.
+     * @see http://zylla.wipos.p.lodz.pl/ut/translation.html
      */
     public function validate() : bool
     {
-        return false;
+        if(mb_strlen($this->cleanNumber) !== 9) {
+            return false;
+        }
+
+        if(!is_numeric($this->cleanNumber)) {
+            return false;
+        }
+
+        $checkDigit = mb_substr($this->cleanNumber, -1);
+        $product = 10;
+
+        for($i = 0; $i <  8; $i++) {
+            $sum = ($this->cleanNumber[$i] + $product) % 10;
+
+            if($sum == 0) {
+                $sum = 10;
+            }
+
+            $product = (2 * $sum) % 11;
+        }
+
+        $calculatedCheckDigit = 11 - $product;
+
+        if($calculatedCheckDigit == 10) {
+            $calculatedCheckDigit = 0;
+        }
+
+        return $calculatedCheckDigit == $checkDigit;
     }
 
     /**
