@@ -115,4 +115,22 @@ abstract class VatProvider
      * @return string
      */
     public abstract function getAbbreviation() : string;
+
+    /**
+     * Returns the number with a certain formatting. The way it works is analogous to the date() function. Each letter
+     * has a special meaning. The letters that are currently available are:
+     * - c: Replaced by the country
+     * - n: Replaced by the CLEAN number
+     * - a: Replaced by the abbreviation
+     *
+     * @param string $format The format in which we want the number returned.
+     * @return string A formatted number according to the variable passed as parameter.
+     *
+     * TODO Implement escape strings? Would it be worth it?
+     */
+    public function format(string $format = 'cn') : string {
+        $formatters = ['c', 'n', 'a'];
+        $values = [$this->getCountry(), $this->cleanNumber, $this->getAbbreviation()];
+        return str_replace($formatters, $values, $format);
+    }
 }
