@@ -80,6 +80,24 @@ abstract class VatProvider
     public abstract function validate() : bool;
 
     /**
+     * Returns the check digit of a number. Use this when the check digit is only numbers.
+     * @param int $length How many characters is the check digit.
+     * @return int Returns the check digit of the number.
+     */
+    protected function getCheckDigit(int $length = 1) : int {
+        return intval(mb_substr($this->cleanNumber, abs($length) * -1));
+    }
+
+    /**
+     * Returns the check character of a number. Use this when the check digit is a letter or alphanumeric.
+     * @param int $length How many characters is the check character.
+     * @return string Returns the check digit of the number.
+     */
+    protected function getCheckChar(int $length = 1) : string {
+        return mb_substr($this->cleanNumber, abs($length) * -1);
+    }
+
+    /**
      * @return string
      */
     public function getNumber() : string
