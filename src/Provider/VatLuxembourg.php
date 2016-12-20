@@ -65,7 +65,7 @@ class VatLuxembourg extends VatProvider
         }
 
         $partialNumber = intval(mb_substr($this->number, 0, -2));
-        return $this->getCheckDigit(2) === ($partialNumber % 89);
+        return $this->getCheckDigit(2, 2) === ($partialNumber % 89);
     }
 
     /**
