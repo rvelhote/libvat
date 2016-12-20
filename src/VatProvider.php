@@ -81,20 +81,22 @@ abstract class VatProvider
 
     /**
      * Returns the check digit of a number. Use this when the check digit is only numbers.
-     * @param int $length How many characters is the check digit.
+     * @param int $position The starting position of the check digit (from the end)
+     * @param int $size The length of the check digit.
      * @return int Returns the check digit of the number.
      */
-    protected function getCheckDigit(int $length = 1) : int {
-        return intval(mb_substr($this->cleanNumber, abs($length) * -1));
+    protected function getCheckDigit(int $position = 1, int $size = 1) : int {
+        return intval(mb_substr($this->cleanNumber, abs($position) * -1, $size));
     }
 
     /**
      * Returns the check character of a number. Use this when the check digit is a letter or alphanumeric.
-     * @param int $length How many characters is the check character.
+     * @param int $position How many characters is the check character.
+     * @param int $size The length of the check character.
      * @return string Returns the check digit of the number.
      */
-    protected function getCheckChar(int $length = 1) : string {
-        return mb_substr($this->cleanNumber, abs($length) * -1);
+    protected function getCheckChar(int $position = 1, int $size = 1) : string {
+        return mb_substr($this->cleanNumber, abs($position) * -1, $size);
     }
 
     /**
