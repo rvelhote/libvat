@@ -36,4 +36,13 @@ class IsNumeric implements RuleInterface
     {
         return is_numeric($number);
     }
+
+    /**
+     * Obtain the error configured by a rule.
+     * @return string|null The error that this rule returns when the validation fails.
+     */
+    public function getError(): string
+    {
+        return '';
+    }
 }

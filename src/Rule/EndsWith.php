@@ -53,4 +53,13 @@ class EndsWith implements RuleInterface
     {
         return substr_compare($number, $this->value, mb_strlen($this->value) * -1) === 0;
     }
+
+    /**
+     * Obtain the error configured by a rule.
+     * @return string|null The error that this rule returns when the validation fails.
+     */
+    public function getError(): string
+    {
+        return '';
+    }
 }

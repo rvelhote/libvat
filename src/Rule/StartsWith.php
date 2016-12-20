@@ -50,4 +50,13 @@ class StartsWith implements RuleInterface
     {
         return mb_stripos($number, $this->value) === 0;
     }
+
+    /**
+     * Obtain the error configured by a rule.
+     * @return string|null The error that this rule returns when the validation fails.
+     */
+    public function getError(): string
+    {
+        return '';
+    }
 }
