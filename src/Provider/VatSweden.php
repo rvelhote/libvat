@@ -23,6 +23,10 @@
 namespace Welhott\Vatlidator\Provider;
 
 use Welhott\Vatlidator\CalculationTrait\DigitalRoot;
+use Welhott\Vatlidator\Rule\BasicRuleset;
+use Welhott\Vatlidator\Rule\EndsWith;
+use Welhott\Vatlidator\Rule\LengthEquals;
+use Welhott\Vatlidator\Rule\IsNumeric;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -57,11 +61,8 @@ class VatSweden extends VatProvider
      */
     public function validate() : bool
     {
-        if(!is_numeric($this->cleanNumber)) {
-            return false;
-        }
-
-        if(mb_strlen($this->cleanNumber) !== 12) {
+        $basicRules = new BasicRuleset($this->cleanNumber, [new IsNumeric(), new LengthEquals(12), new EndsWith('01')]);
+        if($basicRules->valid() === false) {
             return false;
         }
 
