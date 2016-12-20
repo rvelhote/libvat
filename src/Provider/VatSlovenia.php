@@ -43,12 +43,42 @@ class VatSlovenia extends VatProvider
     private $abbreviation = 'ID za DDV';
 
     /**
+     * The list of valid multipliers for the validation algorithm.
+     * @var array
+     */
+    private $multiplier = [8, 7, 6, 5, 4, 3, 2];
+
+    /**
      *
      * @return bool True if the number is valid, false if it's not.
      */
     public function validate() : bool
     {
-        return false;
+        if(!is_numeric($this->cleanNumber)) {
+            return false;
+        }
+
+        if(mb_strlen($this->cleanNumber) !== 8) {
+            return false;
+        }
+
+        $calculatedCheckDigit = 0;
+
+        for($i = 0; $i < 7; $i++) {
+            $calculatedCheckDigit += $this->cleanNumber[$i] * $this->multiplier[$i];
+        }
+
+        $calculatedCheckDigit = 11 - ($calculatedCheckDigit % 11);
+
+        if($calculatedCheckDigit === 0) {
+            return false;
+        }
+
+        if($calculatedCheckDigit === 10) {
+            $calculatedCheckDigit = 0;
+        }
+
+        return $calculatedCheckDigit === $this->getCheckDigit();
     }
 
     /**
