@@ -22,6 +22,9 @@
  */
 namespace Welhott\Vatlidator\Provider;
 
+use Welhott\Vatlidator\Rule\BasicRuleset;
+use Welhott\Vatlidator\Rule\IsNumeric;
+use Welhott\Vatlidator\Rule\LengthEquals;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -54,11 +57,8 @@ class VatSlovenia extends VatProvider
      */
     public function validate() : bool
     {
-        if(!is_numeric($this->cleanNumber)) {
-            return false;
-        }
-
-        if(mb_strlen($this->cleanNumber) !== 8) {
+        $basicRules = new BasicRuleset($this->cleanNumber, [new IsNumeric(), new LengthEquals(8)]);
+        if($basicRules->valid() === false) {
             return false;
         }
 
