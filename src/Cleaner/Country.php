@@ -41,6 +41,7 @@ class Country implements CleanerInterface
         'NO',
         'PL',
         'PT',
+        'SE',
         'SI',
     ];
 

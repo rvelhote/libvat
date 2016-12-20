@@ -22,6 +22,7 @@
  */
 namespace Welhott\Vatlidator\Provider;
 
+use Welhott\Vatlidator\CalculationTrait\DigitalRoot;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -30,6 +31,8 @@ use Welhott\Vatlidator\VatProvider;
  */
 class VatSweden extends VatProvider
 {
+    use DigitalRoot;
+
     /**
      * The ISO 3166-1 alpha-2 code that represents this country
      * @var string
@@ -43,12 +46,37 @@ class VatSweden extends VatProvider
     private $abbreviation = 'Momsnr.';
 
     /**
+     * The list of valid multipliers for the validation algorithm.
+     * @var array
+     */
+    private $multipliers = [2, 1, 2, 1, 2, 1, 2, 1, 2];
+
+    /**
      *
      * @return bool True if the number is valid, false if it's not.
      */
     public function validate() : bool
     {
-        return false;
+        if(!is_numeric($this->cleanNumber)) {
+            return false;
+        }
+
+        if(mb_strlen($this->cleanNumber) !== 12) {
+            return false;
+        }
+
+        $checksum = 0;
+
+        for($i = 0; $i < 9; $i++) {
+            $checksum += $this->digitalRoot($this->cleanNumber[$i] * $this->multipliers[$i]);
+        }
+
+        $checksum = 10 - ($checksum % 10);
+        if($checksum === 10) {
+            $checksum = 0;
+        }
+
+        return $checksum === $this->getCheckDigit(3);
     }
 
     /**
@@ -61,6 +89,7 @@ class VatSweden extends VatProvider
     }
 
     /**
+     * TODO Companies and people have different designations.
      * @return string
      */
     public function getAbbreviation() : string
