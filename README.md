@@ -9,15 +9,29 @@ validate the country code and the number of characters or are just checking the 
 This library will be validating each VAT number against the check digit that is embedded in each number which is much 
 more complete and will ensure that the number is actualy valid (at least according to the checkdigit algorithm).
 
-Supported Countries
----------
+# Supported Countries
 
 This PHP library is still very much a work in progress and I am adding tests and (as much as possible) finding 
 documentation about each country and algorithm before proceeding to the next country.
 
+- Albania (Still unfinished but mostly working)
+- Argentina
+- Australia
 - Austria
+- Belgium
 - Canada
+- Colombia
+- Germany
+- Luxembourg
 - Norway
 - Poland
 - Portugal
+- Slovenia
 - Spain
+- Sweden
+
+# Thank you
+
+I'm using the great [JSVAT](http://www.braemoor.co.uk/software/vat.shtml) and [python_stdnum](https://github.com/arthurdejong/python-stdnum) 
+libraries as inspiration and using them to confirm that my implementations are correct and also when I get stuck or can't 
+find information about them. I will be contributing to them when I am more advanced in my own work. THANK YOU! :)
