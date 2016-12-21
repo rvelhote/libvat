@@ -22,7 +22,6 @@
  */
 namespace Welhott\Vatlidator\Provider;
 
-use Welhott\Vatlidator\CalculationTrait\Mod10Trait;
 use Welhott\Vatlidator\Rule\BasicRuleset;
 use Welhott\Vatlidator\Rule\IsNumeric;
 use Welhott\Vatlidator\Rule\LengthEquals;
@@ -34,8 +33,6 @@ use Welhott\Vatlidator\VatProvider;
  */
 class VatEstonia extends VatProvider
 {
-    use Mod10Trait;
-
     /**
      * The ISO 3166-1 alpha-2 code that represents this country
      * @var string
@@ -66,10 +63,19 @@ class VatEstonia extends VatProvider
             return false;
         }
 
-        $checksum = $this->calculateMod10($this->cleanNumber, $this->multipliers);
-        $checkDigit = $this->getCheckDigit();
+        $checksum = 0;
 
-        return $checksum === $checkDigit;
+        for($i = 0; $i < 8; $i++) {
+            $checksum += $this->cleanNumber[$i] * $this->multipliers[$i];
+        }
+
+        $checksum = 10 - ($checksum % 10);
+
+        if($checksum === 10) {
+            $checksum = 0;
+        }
+
+        return $checksum === $this->getCheckDigit();
     }
 
     /**
