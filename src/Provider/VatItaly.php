@@ -22,6 +22,12 @@
  */
 namespace Welhott\Vatlidator\Provider;
 
+use Welhott\Vatlidator\CalculationTrait\DigitalRoot;
+use Welhott\Vatlidator\Rule\BasicRuleset;
+use Welhott\Vatlidator\Rule\IsNumeric;
+use Welhott\Vatlidator\Rule\Italy\ContainsTaxOffice;
+use Welhott\Vatlidator\Rule\LengthEquals;
+use Welhott\Vatlidator\Rule\NotStartsWith;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -30,6 +36,8 @@ use Welhott\Vatlidator\VatProvider;
  */
 class VatItaly extends VatProvider
 {
+    use DigitalRoot;
+
     /**
      * The ISO 3166-1 alpha-2 code that represents this country
      * @var string
@@ -43,12 +51,50 @@ class VatItaly extends VatProvider
     private $abbreviation = 'P.IVA';
 
     /**
+     * The list of valid multipliers for the validation algorithm.
+     * @var array
+     */
+    private $multipliers = [1, 2, 1, 2, 1, 2, 1, 2, 1, 2];
+
+    /**
+     * The Italian USt IdNr must the following conditions:
+     *  - x1-7 may not be 000000
+     *  - y1-3 = 001-100, 120, 121
+     *
+     * the first seven digits represent the serial number of the person assigned by the relevant provincial office,
+     * which is obtained by increasing the number of units assigned to the subject that precedes it.  the figures from
+     * the eighth to the tenth indicate the provincial office of the IRS code that issued the freshman, generally
+     * corresponding to the code ISTAT of the province.  the eleventh digit, finally, is a control code, introduced in
+     * order to verify the correctness of the first ten digits.
      *
      * @return bool True if the number is valid, false if it's not.
+     * @see http://zylla.wipos.p.lodz.pl/ut/translation.html
+     * @see https://it.wikipedia.org/wiki/Partita_IVA
+     * @see http://www.riolab.org/index.php?option=com_content&view=article&id=55&
+     * @see http://aino.it/algoritmi-calcolo-partita-iva/
      */
     public function validate() : bool
     {
-        return false;
+        $rules = [new IsNumeric(), new LengthEquals(11), new NotStartsWith('000000'), new ContainsTaxOffice()];
+        $basicRules = new BasicRuleset($this->cleanNumber, $rules);
+
+        if($basicRules->valid() === false) {
+            return false;
+        }
+
+        $checksum = 0;
+
+        for($i = 0; $i < 10; $i++) {
+            $checksum += $this->digitalRoot($this->cleanNumber[$i] * $this->multipliers[$i]);
+        }
+
+        $checksum = 10 - ($checksum % 10);
+
+        if($checksum === 10) {
+            $checksum = 0;
+        }
+
+        return $checksum === $this->getCheckDigit();
     }
 
     /**

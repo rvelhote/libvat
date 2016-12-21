@@ -20,39 +20,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace Welhott\Vatlidator\Cleaner;
+namespace Welhott\Vatlidator\Rule;
 
 /**
- * Class Country
- * @package Welhott\Vatlidator\Cleaner
+ * Class NotStartsWith
+ * @package Welhott\Vatlidator\Rule
  */
-class Country implements CleanerInterface
+class NotStartsWith implements RuleInterface
 {
-    private $countries = [
-        'AR',
-        'AU',
-        'AT',
-        'BE',
-        'CA',
-        'CO',
-        'DE',
-        'EE',
-        'ES',
-        'IT',
-        'LU',
-        'NO',
-        'PL',
-        'PT',
-        'SE',
-        'SI',
-    ];
+    /**
+     * @var string
+     */
+    private $value = '';
 
     /**
+     * StartsWithRule constructor.
      * @param string $value
-     * @return string
      */
-    public function transform(string $value): string
+    public function __construct(string $value)
     {
-        return str_ireplace($this->countries, '', $value);
+        $this->value = $value;
+    }
+
+    /**
+     * @param string $number
+     * @return bool
+     */
+    public function validate(string $number) : bool
+    {
+        return mb_stripos($number, $this->value) === false;
+    }
+
+    /**
+     * Obtain the error configured by a rule.
+     * @return string|null The error that this rule returns when the validation fails.
+     */
+    public function getError(): string
+    {
+        return '';
     }
 }
