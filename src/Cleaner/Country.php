@@ -36,6 +36,7 @@ class Country implements CleanerInterface
         'CA',
         'CO',
         'DE',
+        'EE',
         'ES',
         'LU',
         'NO',

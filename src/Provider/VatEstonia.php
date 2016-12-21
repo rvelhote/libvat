@@ -22,6 +22,10 @@
  */
 namespace Welhott\Vatlidator\Provider;
 
+use Welhott\Vatlidator\CalculationTrait\Mod10Trait;
+use Welhott\Vatlidator\Rule\BasicRuleset;
+use Welhott\Vatlidator\Rule\IsNumeric;
+use Welhott\Vatlidator\Rule\LengthEquals;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -30,6 +34,8 @@ use Welhott\Vatlidator\VatProvider;
  */
 class VatEstonia extends VatProvider
 {
+    use Mod10Trait;
+
     /**
      * The ISO 3166-1 alpha-2 code that represents this country
      * @var string
@@ -43,12 +49,27 @@ class VatEstonia extends VatProvider
     private $abbreviation = 'KMKR';
 
     /**
+     * The list of valid multipliers for the validation algorithm.
+     * @var array
+     */
+    private $multipliers = [3, 7, 1, 3, 7, 1, 3, 7];
+
+    /**
      *
      * @return bool True if the number is valid, false if it's not.
+     * @see http://www.taust.ee/
      */
     public function validate() : bool
     {
-        return false;
+        $basicRules = new BasicRuleset($this->cleanNumber, [new IsNumeric(), new LengthEquals(9)]);
+        if($basicRules->valid() === false) {
+            return false;
+        }
+
+        $checksum = $this->calculateMod10($this->cleanNumber, $this->multipliers);
+        $checkDigit = $this->getCheckDigit();
+
+        return $checksum === $checkDigit;
     }
 
     /**
