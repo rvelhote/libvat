@@ -71,7 +71,7 @@ class VatPortugalTest extends BaseVatValidationTest implements BaseVatValidation
     {
         $validator = new VatPortugal($number);
 
-        $this->assertFalse($validator->validate(), sprintf('%d should be invalid', $number));
+        $this->assertFalse($validator->validate(), sprintf('%s should be invalid', $number));
         $this->assertEquals($this->country, $validator->getCountry());
         $this->assertEquals($number, $validator->getNumber());
     }

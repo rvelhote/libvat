@@ -54,7 +54,7 @@ class VatCroatiaTest extends BaseVatValidationTest implements BaseVatValidationI
     {
         $validator = new VatCroatia($number);
 
-        $this->assertTrue($validator->validate(), sprintf('%d should be valid', $number));
+        $this->assertTrue($validator->validate(), sprintf('%s should be valid', $number));
         $this->assertEquals($this->country, $validator->getCountry());
         $this->assertEquals($number, $validator->getNumber());
         $this->assertEquals($this->abbreviation, $validator->getAbbreviation());
@@ -67,7 +67,7 @@ class VatCroatiaTest extends BaseVatValidationTest implements BaseVatValidationI
     {
         $validator = new VatCroatia($number);
 
-        $this->assertFalse($validator->validate(), sprintf('%d should be invalid', $number));
+        $this->assertFalse($validator->validate(), sprintf('%s should be invalid', $number));
         $this->assertEquals($this->country, $validator->getCountry());
         $this->assertEquals($number, $validator->getNumber());
     }
