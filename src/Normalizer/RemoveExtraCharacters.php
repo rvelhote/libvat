@@ -23,10 +23,10 @@
 namespace Welhott\Vatlidator\Normalizer;
 
 /**
- * Class ExtraCharacters
+ * Class RemoveExtraCharacters
  * @package Welhott\Vatlidator\Normalizer
  */
-class ExtraCharacters implements NormalizerInterface
+class RemoveExtraCharacters implements NormalizerInterface
 {
     /**
      * @var array

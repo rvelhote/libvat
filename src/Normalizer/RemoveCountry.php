@@ -23,10 +23,10 @@
 namespace Welhott\Vatlidator\Normalizer;
 
 /**
- * Class Country
+ * Class RemoveCountry
  * @package Welhott\Vatlidator\Normalizer
  */
-class Country implements NormalizerInterface
+class RemoveCountry implements NormalizerInterface
 {
     private $countries = [
         'AR',

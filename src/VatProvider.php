@@ -22,8 +22,8 @@
  */
 namespace Welhott\Vatlidator;
 
-use Welhott\Vatlidator\Normalizer\Country;
-use Welhott\Vatlidator\Normalizer\ExtraCharacters;
+use Welhott\Vatlidator\Normalizer\RemoveCountry;
+use Welhott\Vatlidator\Normalizer\RemoveExtraCharacters;
 use Welhott\Vatlidator\Normalizer\NormalizerInterface;
 use Welhott\Vatlidator\Normalizer\Trim;
 use Welhott\Vatlidator\Normalizer\Uppercase;
@@ -59,7 +59,7 @@ abstract class VatProvider
     {
         $this->number = $number;
 
-        $defaultNormalizers = [new Trim(), new Uppercase(), new ExtraCharacters(), new Country()];
+        $defaultNormalizers = [new Trim(), new Uppercase(), new RemoveExtraCharacters(), new RemoveCountry()];
         $this->normalizers = array_merge($defaultNormalizers, $normalizers);
 
         $this->cleanNumber = $this->clean($number);
