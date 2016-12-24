@@ -40,6 +40,7 @@ class Country implements CleanerInterface
         'ES',
         'IT',
         'LU',
+        'MT',
         'NO',
         'PL',
         'PT',

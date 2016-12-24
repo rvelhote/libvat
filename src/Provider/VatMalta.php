@@ -22,6 +22,9 @@
  */
 namespace Welhott\Vatlidator\Provider;
 
+use Welhott\Vatlidator\Rule\BasicRuleset;
+use Welhott\Vatlidator\Rule\IsNumeric;
+use Welhott\Vatlidator\Rule\LengthEquals;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -43,12 +46,30 @@ class VatMalta extends VatProvider
     private $abbreviation = 'Vat No.';
 
     /**
+     * @var array
+     */
+    private $multipliers = [3, 4, 6, 7, 8, 9];
+
+    /**
      *
      * @return bool True if the number is valid, false if it's not.
      */
     public function validate() : bool
     {
-        return false;
+        $basicRules = new BasicRuleset($this->cleanNumber, [new IsNumeric(), new LengthEquals(8)]);
+        if($basicRules->valid() === false) {
+            return false;
+        }
+
+        $checksum = 0;
+        for($i = 0; $i < 6; $i++) {
+            $checksum += $this->cleanNumber[$i] * $this->multipliers[$i];
+        }
+
+        $checksum = 37 - ($checksum % 37);
+        $checkDigit = $this->getCheckDigit(2);
+
+        return $checksum === $checkDigit;
     }
 
     /**
