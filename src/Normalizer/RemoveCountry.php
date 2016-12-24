@@ -45,6 +45,7 @@ class RemoveCountry implements NormalizerInterface
         'NO',
         'PL',
         'PT',
+        'RO',
         'SE',
         'SI',
         'SK',

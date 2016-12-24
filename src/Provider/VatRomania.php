@@ -43,12 +43,40 @@ class VatRomania extends VatProvider
     private $abbreviation = 'CIF';
 
     /**
+     * @var array
+     */
+    private $multipliers = [7, 5, 3, 2, 1, 7, 5, 3, 2];
+
+    /**
+     * @var string
+     */
+    private $pattern = '[1-9]\d{1,9}';
+
+    /**
      *
      * @return bool True if the number is valid, false if it's not.
      */
     public function validate() : bool
     {
-        return false;
+        if(!$this->matchesPattern($this->pattern)) {
+            return false;
+        }
+
+        $checksum = 0;
+        $length = mb_strlen($this->cleanNumber);
+        $this->multipliers = array_slice($this->multipliers, 10 - $length);
+
+        for($i = 0; $i < $length - 1; $i++) {
+            $checksum += $this->cleanNumber[$i] * $this->multipliers[$i];
+        }
+
+        $checksum = (10 * $checksum) % 11;
+
+        if($checksum === 10) {
+            $checksum = 0;
+        }
+
+        return $checksum === $this->getCheckDigit();
     }
 
     /**
