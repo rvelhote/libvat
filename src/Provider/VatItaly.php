@@ -23,11 +23,6 @@
 namespace Welhott\Vatlidator\Provider;
 
 use Welhott\Vatlidator\CalculationTrait\DigitalRoot;
-use Welhott\Vatlidator\Rule\BasicRuleset;
-use Welhott\Vatlidator\Rule\IsNumeric;
-use Welhott\Vatlidator\Rule\Italy\ContainsTaxOffice;
-use Welhott\Vatlidator\Rule\LengthEquals;
-use Welhott\Vatlidator\Rule\NotStartsWith;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -57,6 +52,11 @@ class VatItaly extends VatProvider
     private $multipliers = [1, 2, 1, 2, 1, 2, 1, 2, 1, 2];
 
     /**
+     * @var string
+     */
+    private $pattern = '\d{7}120|121|888|999|100|0[0-9]{2}\d{1}';
+
+    /**
      * The Italian USt IdNr must the following conditions:
      *  - x1-7 may not be 000000
      *  - y1-3 = 001-100, 120, 121
@@ -75,10 +75,7 @@ class VatItaly extends VatProvider
      */
     public function validate() : bool
     {
-        $rules = [new IsNumeric(), new LengthEquals(11), new NotStartsWith('000000'), new ContainsTaxOffice()];
-        $basicRules = new BasicRuleset($this->cleanNumber, $rules);
-
-        if($basicRules->valid() === false) {
+        if(!$this->matchesPattern($this->pattern)) {
             return false;
         }
 

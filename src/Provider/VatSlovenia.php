@@ -22,9 +22,6 @@
  */
 namespace Welhott\Vatlidator\Provider;
 
-use Welhott\Vatlidator\Rule\BasicRuleset;
-use Welhott\Vatlidator\Rule\IsNumeric;
-use Welhott\Vatlidator\Rule\LengthEquals;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -52,13 +49,17 @@ class VatSlovenia extends VatProvider
     private $multiplier = [8, 7, 6, 5, 4, 3, 2];
 
     /**
+     * @var string
+     */
+    private $pattern = '\d{8}';
+
+    /**
      *
      * @return bool True if the number is valid, false if it's not.
      */
     public function validate() : bool
     {
-        $basicRules = new BasicRuleset($this->cleanNumber, [new IsNumeric(), new LengthEquals(8)]);
-        if($basicRules->valid() === false) {
+        if(!$this->matchesPattern($this->pattern)) {
             return false;
         }
 

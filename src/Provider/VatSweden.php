@@ -23,10 +23,6 @@
 namespace Welhott\Vatlidator\Provider;
 
 use Welhott\Vatlidator\CalculationTrait\DigitalRoot;
-use Welhott\Vatlidator\Rule\BasicRuleset;
-use Welhott\Vatlidator\Rule\EndsWith;
-use Welhott\Vatlidator\Rule\LengthEquals;
-use Welhott\Vatlidator\Rule\IsNumeric;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -56,13 +52,17 @@ class VatSweden extends VatProvider
     private $multipliers = [2, 1, 2, 1, 2, 1, 2, 1, 2];
 
     /**
+     * @var string
+     */
+    private $pattern = '\d{10}01';
+
+    /**
      *
      * @return bool True if the number is valid, false if it's not.
      */
     public function validate() : bool
     {
-        $basicRules = new BasicRuleset($this->cleanNumber, [new IsNumeric(), new LengthEquals(12), new EndsWith('01')]);
-        if($basicRules->valid() === false) {
+        if(!$this->matchesPattern($this->pattern)) {
             return false;
         }
 

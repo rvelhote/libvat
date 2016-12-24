@@ -22,9 +22,6 @@
  */
 namespace Welhott\Vatlidator\Provider;
 
-use Welhott\Vatlidator\Rule\BasicRuleset;
-use Welhott\Vatlidator\Rule\IsNumeric;
-use Welhott\Vatlidator\Rule\LengthEquals;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -52,14 +49,18 @@ class VatEstonia extends VatProvider
     private $multipliers = [3, 7, 1, 3, 7, 1, 3, 7];
 
     /**
+     * @var string
+     */
+    private $pattern = '\d{9}';
+
+    /**
      *
      * @return bool True if the number is valid, false if it's not.
      * @see http://www.taust.ee/
      */
     public function validate() : bool
     {
-        $basicRules = new BasicRuleset($this->cleanNumber, [new IsNumeric(), new LengthEquals(9)]);
-        if($basicRules->valid() === false) {
+        if(!$this->matchesPattern($this->pattern)) {
             return false;
         }
 
