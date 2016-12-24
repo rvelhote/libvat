@@ -85,7 +85,10 @@ abstract class VatProvider
      * @param int $size The length of the check digit.
      * @return int Returns the check digit of the number.
      */
-    protected function getCheckDigit(int $position = 1, int $size = 1) : int {
+    protected function getCheckDigit(int $position = 1, int $size = 0) : int {
+        if($size === 0) {
+            return intval(mb_substr($this->cleanNumber, abs($position) * -1));
+        }
         return intval(mb_substr($this->cleanNumber, abs($position) * -1, $size));
     }
 
