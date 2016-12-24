@@ -43,12 +43,22 @@ class VatSlovakia extends VatProvider
     private $abbreviation = 'IČ DPH';
 
     /**
+     * @var string
+     */
+    private $pattern = '[1-9]\d[2346-9]\d{7}';
+
+    /**
      *
      * @return bool True if the number is valid, false if it's not.
      */
     public function validate() : bool
     {
-        return false;
+        if(!$this->matchesPattern($this->pattern)) {
+            return false;
+        }
+
+        $checksum = $this->cleanNumber % 11;
+        return $checksum === 0;
     }
 
     /**

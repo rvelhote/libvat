@@ -47,6 +47,7 @@ class RemoveCountry implements NormalizerInterface
         'PT',
         'SE',
         'SI',
+        'SK',
     ];
 
     /**
