@@ -57,7 +57,10 @@ abstract class VatProvider
     public function __construct(string $number, array $cleaners = [])
     {
         $this->number = $number;
-        $this->cleaners = [new Trim(), new Uppercase(), new ExtraCharacters(), new Country()];
+
+        $defaultCleaners = [new Trim(), new Uppercase(), new ExtraCharacters(), new Country()];
+        $this->cleaners = array_merge($defaultCleaners, $cleaners);
+
         $this->cleanNumber = $this->clean($number);
     }
 
@@ -72,6 +75,15 @@ abstract class VatProvider
         };
 
         return array_reduce($this->cleaners, $callback, $number);
+    }
+
+    /**
+     * @param string $pattern
+     * @return bool
+     */
+    protected function matchesPattern(string $pattern) : bool
+    {
+        return preg_match('/^'.$pattern.'$/', $this->cleanNumber) === 1;
     }
 
     /**

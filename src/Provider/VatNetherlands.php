@@ -22,6 +22,7 @@
  */
 namespace Welhott\Vatlidator\Provider;
 
+use Welhott\Vatlidator\Cleaner\Padding;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -41,14 +42,48 @@ class VatNetherlands extends VatProvider
      * @var string
      */
     private $abbreviation = 'Btw-nr.';
+    /**
+     * The list of valid multipliers for the validation algorithm.
+     * @var array
+     */
+    private $multipliers = [9, 8, 7, 6, 5, 4, 3, 2];
 
     /**
-     *
+     * @var
+     */
+    private $pattern = '\d{9}B\d{2}';
+
+    /**
+     * VatNetherlands constructor.
+     * @param string $number
+     * @param array $cleaners
+     */
+    public function __construct($number, $cleaners = [])
+    {
+        $cleaners = [new Padding(12, 0, STR_PAD_LEFT)];
+        parent::__construct($number, $cleaners);
+    }
+
+    /**
+     * 'NL'+9 digits+B+2-digit company index – e.g. NL999999999B99
      * @return bool True if the number is valid, false if it's not.
      */
     public function validate() : bool
     {
-        return false;
+        if(!$this->matchesPattern($this->pattern)) {
+            return false;
+        }
+
+        $checksum = 0;
+
+        for($i = 0; $i < 8; $i++) {
+            $checksum += $this->cleanNumber[$i] * $this->multipliers[$i];
+        }
+
+        $checksum = $checksum % 11 > 9 ? 0 : $checksum % 11;
+        $checkdigit = $this->getCheckDigit(4, 1);
+
+        return $checksum === $checkdigit;
     }
 
     /**
