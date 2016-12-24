@@ -22,6 +22,7 @@
  */
 namespace Welhott\Vatlidator\Provider;
 
+use Welhott\Vatlidator\Normalizer\Padding;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -42,17 +43,17 @@ class VatBelgium extends VatProvider
      */
     private $abbreviation = 'TVA';
 
+    private $pattern = '[0|1]\d{9}';
+
     /**
      * VatBelgium constructor.
      * @param string $number
+     * @param array $normalizers
      */
-    public function __construct($number)
+    public function __construct(string $number, array $normalizers = [])
     {
-        parent::__construct($number);
-
-        if(mb_strlen($this->cleanNumber) === 9) {
-            $this->cleanNumber = str_pad($this->cleanNumber, 10, 0, STR_PAD_LEFT);
-        }
+        $normalizers = [new Padding(10)];
+        parent::__construct($number, $normalizers);
     }
 
     /**
@@ -61,17 +62,7 @@ class VatBelgium extends VatProvider
      */
     public function validate() : bool
     {
-        $firstDigit = intval($this->cleanNumber[0]);
-
-        if(!is_numeric($this->cleanNumber)) {
-            return false;
-        }
-
-        if(mb_strlen($this->cleanNumber) !== 10) {
-            return false;
-        }
-
-        if($firstDigit !== 0 && $firstDigit !== 1) {
+        if(!$this->matchesPattern($this->pattern)) {
             return false;
         }
 
