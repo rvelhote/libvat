@@ -77,7 +77,7 @@ class VatSweden extends VatProvider
             $checksum = 0;
         }
 
-        return $checksum === $this->getCheckDigit(3);
+        return $checksum === $this->getCheckDigit(3, 1);
     }
 
     /**
