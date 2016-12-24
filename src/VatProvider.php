@@ -21,11 +21,12 @@
  * SOFTWARE.
  */
 namespace Welhott\Vatlidator;
-use Welhott\Vatlidator\Cleaner\Country;
-use Welhott\Vatlidator\Cleaner\ExtraCharacters;
-use Welhott\Vatlidator\Cleaner\CleanerInterface;
-use Welhott\Vatlidator\Cleaner\Trim;
-use Welhott\Vatlidator\Cleaner\Uppercase;
+
+use Welhott\Vatlidator\Normalizer\Country;
+use Welhott\Vatlidator\Normalizer\ExtraCharacters;
+use Welhott\Vatlidator\Normalizer\NormalizerInterface;
+use Welhott\Vatlidator\Normalizer\Trim;
+use Welhott\Vatlidator\Normalizer\Uppercase;
 
 /**
  * Interface VatProviderInterface
@@ -45,21 +46,21 @@ abstract class VatProvider
     protected $cleanNumber;
 
     /**
-     * @var CleanerInterface[]
+     * @var NormalizerInterface[]
      */
-    private $cleaners = [];
+    private $normalizers = [];
 
     /**
      * VatProvider constructor.
      * @param string $number
-     * @param CleanerInterface[] $cleaners
+     * @param NormalizerInterface[] $normalizers
      */
-    public function __construct(string $number, array $cleaners = [])
+    public function __construct(string $number, array $normalizers = [])
     {
         $this->number = $number;
 
-        $defaultCleaners = [new Trim(), new Uppercase(), new ExtraCharacters(), new Country()];
-        $this->cleaners = array_merge($defaultCleaners, $cleaners);
+        $defaultNormalizers = [new Trim(), new Uppercase(), new ExtraCharacters(), new Country()];
+        $this->normalizers = array_merge($defaultNormalizers, $normalizers);
 
         $this->cleanNumber = $this->clean($number);
     }
@@ -70,11 +71,11 @@ abstract class VatProvider
      */
     protected function clean(string $number) : string
     {
-        $callback = function(string $number, CleanerInterface $transformer) {
-            return $transformer->transform($number);
+        $callback = function(string $number, NormalizerInterface $transformer) {
+            return $transformer->normalize($number);
         };
 
-        return array_reduce($this->cleaners, $callback, $number);
+        return array_reduce($this->normalizers, $callback, $number);
     }
 
     /**

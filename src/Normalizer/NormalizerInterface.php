@@ -20,16 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace Welhott\Vatlidator\Cleaner;
+namespace Welhott\Vatlidator\Normalizer;
 
 /**
- * Class Uppercase
- * @package Welhott\Vatlidator\Cleaner
+ * Interface NormalizerInterface
+ * @package Welhott\Vatlidator\Normalizer
  */
-class Uppercase implements CleanerInterface
+interface NormalizerInterface
 {
-    public function transform(string $value) : string
-    {
-        return mb_strtoupper($value);
-    }
+    /**
+     * @param string $value
+     * @return string
+     */
+    public function normalize(string $value) : string;
 }

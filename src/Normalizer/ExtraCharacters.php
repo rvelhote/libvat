@@ -20,48 +20,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace Welhott\Vatlidator\Cleaner;
+namespace Welhott\Vatlidator\Normalizer;
 
 /**
- * Class Padding
- * @package Welhott\Vatlidator\Cleaner
+ * Class ExtraCharacters
+ * @package Welhott\Vatlidator\Normalizer
  */
-class Padding implements CleanerInterface
+class ExtraCharacters implements NormalizerInterface
 {
     /**
-     * @var int
+     * @var array
      */
-    private $length;
+    private $chars = [];
 
     /**
-     * @var string
+     * ExtraCharacters constructor.
+     * @param array $chars
      */
-    private $char;
-
-    /**
-     * @var int
-     */
-    private $type;
-
-    /**
-     * Padding constructor.
-     * @param int $length
-     * @param string $char
-     * @param int $type
-     */
-    public function __construct(int $length, string $char, int $type)
+    public function __construct(array $chars = [' ', '(', ')', ',', '-', '.'])
     {
-        $this->length = $length;
-        $this->char = $char;
-        $this->type = $type;
+        $this->chars = $chars;
     }
 
     /**
      * @param string $value
      * @return string
      */
-    public function transform(string $value): string
+    public function normalize(string $value): string
     {
-        return str_pad($value, $this->length, $this->char, $this->type);
+        return str_ireplace($this->chars, '', $value);
     }
 }

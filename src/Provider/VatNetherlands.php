@@ -22,7 +22,7 @@
  */
 namespace Welhott\Vatlidator\Provider;
 
-use Welhott\Vatlidator\Cleaner\Padding;
+use Welhott\Vatlidator\Normalizer\Padding;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -56,12 +56,12 @@ class VatNetherlands extends VatProvider
     /**
      * VatNetherlands constructor.
      * @param string $number
-     * @param array $cleaners
+     * @param array $normalizers
      */
-    public function __construct($number, $cleaners = [])
+    public function __construct($number, $normalizers = [])
     {
-        $cleaners = [new Padding(12, 0, STR_PAD_LEFT)];
-        parent::__construct($number, $cleaners);
+        $normalizers = [new Padding(12, 0, STR_PAD_LEFT)];
+        parent::__construct($number, $normalizers);
     }
 
     /**

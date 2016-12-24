@@ -20,20 +20,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace Welhott\Vatlidator\Cleaner;
+namespace Welhott\Vatlidator\Normalizer;
 
 /**
- * Class Trim
- * @package Welhott\Vatlidator\Cleaner
+ * Class Country
+ * @package Welhott\Vatlidator\Normalizer
  */
-class Trim implements CleanerInterface
+class Country implements NormalizerInterface
 {
+    private $countries = [
+        'AR',
+        'AU',
+        'AT',
+        'BE',
+        'CA',
+        'CO',
+        'DE',
+        'EE',
+        'ES',
+        'IT',
+        'LU',
+        'MT',
+        'NL',
+        'NO',
+        'PL',
+        'PT',
+        'SE',
+        'SI',
+    ];
+
     /**
      * @param string $value
      * @return string
      */
-    public function transform(string $value) : string
+    public function normalize(string $value): string
     {
-        return trim($value);
+        return str_ireplace($this->countries, '', $value);
     }
 }

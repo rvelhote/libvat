@@ -46,6 +46,7 @@ class VatMalta extends VatProvider
     private $abbreviation = 'Vat No.';
 
     /**
+     * The list of valid multipliers for the validation algorithm.
      * @var array
      */
     private $multipliers = [3, 4, 6, 7, 8, 9];
