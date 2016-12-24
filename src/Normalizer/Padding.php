@@ -49,7 +49,7 @@ class Padding implements NormalizerInterface
      * @param string $char
      * @param int $type
      */
-    public function __construct(int $length, string $char, int $type)
+    public function __construct(int $length, string $char = '0', int $type = STR_PAD_LEFT)
     {
         $this->length = $length;
         $this->char = $char;
