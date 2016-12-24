@@ -62,6 +62,11 @@ class VatAustria extends VatProvider
     private $multipliers = [1, 2, 1, 2, 1, 2, 1];
 
     /**
+     * @var string
+     */
+    private $pattern = 'U\d{8}';
+
+    /**
      *
      * @return bool True if the number is valid, false if it's not.
      *
@@ -70,15 +75,11 @@ class VatAustria extends VatProvider
      */
     public function validate() : bool
     {
+        if(!$this->matchesPattern($this->pattern)) {
+            return false;
+        }
+
         $calculatedCheckDigit = 0;
-
-        if (mb_strlen($this->cleanNumber) !== self::LENGTH) {
-            return false;
-        }
-
-        if ($this->cleanNumber[0] !== 'U') {
-            return false;
-        }
 
         // Exclude the first char and the last number which is the check digit.
         for ($i = 1, $j = 0; $i <= self::LENGTH - 2; $i++, $j++) {

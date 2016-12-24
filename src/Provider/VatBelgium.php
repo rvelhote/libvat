@@ -43,6 +43,9 @@ class VatBelgium extends VatProvider
      */
     private $abbreviation = 'TVA';
 
+    /**
+     * @var string
+     */
     private $pattern = '[0|1]\d{9}';
 
     /**
