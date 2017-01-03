@@ -43,12 +43,34 @@ class VatCroatia extends VatProvider
     private $abbreviation = 'OIB';
 
     /**
-     *
+     * @var string
+     */
+    private $pattern = '\d{11}';
+
+    /**
+     * Uses ISO 7064, MOD 11-10
      * @return bool True if the number is valid, false if it's not.
      */
     public function validate() : bool
     {
-        return false;
+        if(!$this->matchesPattern($this->pattern)) {
+            return false;
+        }
+
+        $product = 10;
+
+        for($i = 0; $i < 10; $i++) {
+            $sum = ($this->cleanNumber[$i] + $product) % 10;
+
+            if($sum === 0) {
+                $sum = 10;
+            }
+
+            $product = (2 * $sum) % 11;
+        }
+
+        $calculatedCheckDigit = ($product + $this->getCheckDigit()) % 10;
+        return $calculatedCheckDigit === 1;
     }
 
     /**
