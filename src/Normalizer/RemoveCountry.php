@@ -39,6 +39,7 @@ class RemoveCountry implements NormalizerInterface
         'EE',
         'ES',
         'HR',
+        'HU',
         'IT',
         'LU',
         'MT',
