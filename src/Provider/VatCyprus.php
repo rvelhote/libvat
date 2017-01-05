@@ -43,12 +43,41 @@ class VatCyprus extends VatProvider
     private $abbreviation = 'ΦΠΑ';
 
     /**
-     *
+     * @var string
+     */
+    private $pattern = '![12]|[0-59]\d{7}[A-Z]';
+
+    /**x
      * @return bool True if the number is valid, false if it's not.
      */
     public function validate() : bool
     {
-        return false;
+        if(!$this->matchesPattern($this->pattern)) {
+            return false;
+        }
+
+        $checksum = 0;
+
+        for($i = 0; $i < 8; $i++) {
+            if($i % 2 !== 0) {
+                $checksum += $this->cleanNumber[$i];
+                continue;
+            }
+
+            switch($this->cleanNumber[$i]) {
+                case 0: $multiplier = 1; break;
+                case 1: $multiplier = 0; break;
+                case 2: $multiplier = 5; break;
+                case 3: $multiplier = 7; break;
+                case 4: $multiplier = 9; break;
+                default: $multiplier = ($this->cleanNumber[$i] * 2) + 3; break;
+            }
+
+            $checksum += $multiplier;
+        }
+
+        $checkchar = chr(($checksum % 26) + 65);
+        return $checkchar === $this->getCheckChar();
     }
 
     /**
