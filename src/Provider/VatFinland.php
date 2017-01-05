@@ -43,12 +43,38 @@ class VatFinland extends VatProvider
     private $abbreviation = 'ALV nro';
 
     /**
+     * @var array
+     */
+    private $multipliers = [7, 9, 10, 5, 8, 4, 2];
+
+    /**
+     * @var string
+     */
+    private $pattern = '\d{8}';
+
+    /**
      *
      * @return bool True if the number is valid, false if it's not.
      */
     public function validate() : bool
     {
-        return false;
+        if(!$this->matchesPattern($this->pattern)) {
+            return false;
+        }
+
+        $checksum = 0;
+
+        for($i = 0; $i < 7; $i++) {
+            $checksum += $this->cleanNumber[$i] * $this->multipliers[$i];
+        }
+
+        $checksum = 11 - ($checksum % 11);
+
+        if($checksum > 9) {
+            $checksum = 0;
+        }
+
+        return $checksum === $this->getCheckDigit();
     }
 
     /**
