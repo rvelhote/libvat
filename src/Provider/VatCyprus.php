@@ -43,6 +43,17 @@ class VatCyprus extends VatProvider
     private $abbreviation = 'ΦΠΑ';
 
     /**
+     * @var array
+     */
+    private $translation = [
+        0 => 1,
+        1 => 0,
+        2 => 5,
+        3 => 7,
+        4 => 9,
+    ];
+
+    /**
      * @var string
      */
     private $pattern = '![12]|[0-59]\d{7}[A-Z]';
@@ -59,21 +70,17 @@ class VatCyprus extends VatProvider
         $checksum = 0;
 
         for($i = 0; $i < 8; $i++) {
-            if($i % 2 !== 0) {
+            if(($i % 2) !== 0) {
                 $checksum += $this->cleanNumber[$i];
                 continue;
             }
 
-            switch($this->cleanNumber[$i]) {
-                case 0: $multiplier = 1; break;
-                case 1: $multiplier = 0; break;
-                case 2: $multiplier = 5; break;
-                case 3: $multiplier = 7; break;
-                case 4: $multiplier = 9; break;
-                default: $multiplier = ($this->cleanNumber[$i] * 2) + 3; break;
+            if(!array_key_exists($this->cleanNumber[$i], $this->translation)) {
+                $checksum += ($this->cleanNumber[$i] * 2) + 3;
+                continue;
             }
 
-            $checksum += $multiplier;
+            $checksum += $this->translation[$this->cleanNumber[$i]];
         }
 
         $checkchar = chr(($checksum % 26) + 65);
