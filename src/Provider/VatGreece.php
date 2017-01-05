@@ -22,6 +22,7 @@
  */
 namespace Welhott\Vatlidator\Provider;
 
+use Welhott\Vatlidator\Normalizer\Padding;
 use Welhott\Vatlidator\VatProvider;
 
 /**
@@ -43,12 +44,48 @@ class VatGreece extends VatProvider
     private $abbreviation = 'ΑΦΜ';
 
     /**
+     * @var array
+     */
+    private $multipliers = [256, 128, 64, 32, 16, 8, 4, 2];
+
+    /**
+     * @var string
+     */
+    private $pattern = '\d{9}';
+
+    /**
+     * VatGreece constructor.
+     * @param string $number
+     * @param array $normalizers
+     */
+    public function __construct($number, $normalizers = [])
+    {
+        $normalizers = array_merge($normalizers, [new Padding(9)]);
+        parent::__construct($number, $normalizers);
+    }
+
+    /**
      *
      * @return bool True if the number is valid, false if it's not.
      */
     public function validate() : bool
     {
-        return false;
+        if(!$this->matchesPattern($this->pattern)) {
+            return false;
+        }
+
+        $checksum = 0;
+
+        for($i = 0; $i < 8; $i++) {
+            $checksum += $this->cleanNumber[$i] * $this->multipliers[$i];
+        }
+
+        $checksum = $checksum % 11;
+        if($checksum > 9) {
+            $checksum = 0;
+        }
+
+        return $checksum === $this->getCheckDigit();
     }
 
     /**
